@@ -27,6 +27,9 @@ wallace-*.tar
 # this depending on your deployment strategy.
 /priv/static/
 
+### Visual Studio Code ###
+.elixir_ls/
+
 ### macOS ###
 # General
 .DS_Store

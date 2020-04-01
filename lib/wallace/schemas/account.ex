@@ -1,5 +1,7 @@
 defmodule Wallace.Schemas.Account do
   use Ecto.Schema
+  use Wallace.Schemas.Base
+
   import Ecto.Changeset
 
   alias Wallace.Schemas.AccountType
@@ -16,7 +18,7 @@ defmodule Wallace.Schemas.Account do
   @doc false
   def changeset(account, attrs) do
     account
-    |> cast(attrs, [:name, :balance])
-    |> validate_required([:name, :balance])
+    |> cast(attrs, [:name, :balance, :type_id])
+    |> validate_required([:name, :balance, :type_id])
   end
 end

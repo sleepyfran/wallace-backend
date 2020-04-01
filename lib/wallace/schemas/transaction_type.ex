@@ -1,5 +1,7 @@
 defmodule Wallace.Schemas.TransactionType do
   use Ecto.Schema
+  use Wallace.Schemas.Base
+
   import Ecto.Changeset
 
   schema "transaction_types" do

@@ -1,5 +1,7 @@
 defmodule Wallace.Schemas.Transaction do
   use Ecto.Schema
+  use Wallace.Schemas.Base
+
   import Ecto.Changeset
 
   alias Wallace.Schemas.Account
@@ -25,7 +27,32 @@ defmodule Wallace.Schemas.Transaction do
   @doc false
   def changeset(transaction, attrs) do
     transaction
-    |> cast(attrs, [:amount, :date, :notes])
-    |> validate_required([:amount, :date, :notes])
+    |> cast(attrs, [
+      :amount,
+      :date,
+      :notes,
+      :repetition,
+      :account_id,
+      :category_id,
+      :payee_id,
+      :type_id
+    ])
+    |> validate_required([
+      :amount,
+      :date,
+      :notes,
+      :repetition,
+      :account_id,
+      :category_id,
+      :type_id
+    ])
+    |> validate_min_money
+  end
+
+  defp validate_min_money(changeset) do
+    validate_change(changeset, :amount, fn
+      _, %Money{amount: amount} when amount > 0 -> []
+      _, _ -> [amount: "must be greater than 0"]
+    end)
   end
 end

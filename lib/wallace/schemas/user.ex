@@ -1,5 +1,7 @@
 defmodule Wallace.Schemas.User do
   use Ecto.Schema
+  use Wallace.Schemas.Base
+
   import Ecto.Changeset
 
   schema "users" do

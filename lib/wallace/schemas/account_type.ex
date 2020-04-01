@@ -1,5 +1,7 @@
 defmodule Wallace.Schemas.AccountType do
   use Ecto.Schema
+  use Wallace.Schemas.Base
+
   import Ecto.Changeset
 
   schema "account_types" do

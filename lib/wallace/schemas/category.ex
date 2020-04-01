@@ -1,5 +1,7 @@
 defmodule Wallace.Schemas.Category do
   use Ecto.Schema
+  use Wallace.Schemas.Base
+
   import Ecto.Changeset
 
   schema "categories" do

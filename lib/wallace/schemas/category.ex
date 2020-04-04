@@ -4,9 +4,13 @@ defmodule Wallace.Schemas.Category do
 
   import Ecto.Changeset
 
+  alias Wallace.Schemas.User
+
   schema "categories" do
     field :icon, :string
     field :name, :string
+
+    belongs_to :user, User
 
     timestamps()
   end

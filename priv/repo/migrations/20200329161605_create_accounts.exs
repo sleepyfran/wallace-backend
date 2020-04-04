@@ -5,7 +5,8 @@ defmodule Wallace.Repo.Migrations.CreateAccounts do
     create table(:accounts) do
       add :name, :string
       add :balance, :money_type
-      add :type_id, references(:accounts, on_delete: :nilify_all)
+      add :type_id, references(:account_types, on_delete: :nilify_all)
+      add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()
     end

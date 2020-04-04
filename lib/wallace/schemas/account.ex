@@ -5,12 +5,14 @@ defmodule Wallace.Schemas.Account do
   import Ecto.Changeset
 
   alias Wallace.Schemas.AccountType
+  alias Wallace.Schemas.User
 
   schema "accounts" do
     field :balance, Money.Ecto.Composite.Type
     field :name, :string
 
     belongs_to :type, AccountType
+    belongs_to :user, User
 
     timestamps()
   end

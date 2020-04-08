@@ -6,6 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Wallace.Api.Filters;
+using Wallace.Application;
 using Wallace.Persistence;
 
 namespace Wallace
@@ -36,8 +38,13 @@ namespace Wallace
                 });
 
             services
+                .AddApplication()
                 .AddPersistence(Configuration)
                 .AddControllers();
+
+            services.AddControllersWithViews(
+                options => options.Filters.Add(new ExceptionFilter())
+            );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

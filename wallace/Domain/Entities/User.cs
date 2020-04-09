@@ -14,6 +14,6 @@ namespace Wallace.Domain.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         
-        public List<Account> Accounts { get; set; }
+        public List<Account> Accounts { get; set; } = new List<Account>();
     }
 }

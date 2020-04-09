@@ -9,7 +9,8 @@ namespace Wallace.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post(SetupCommand input)
         {
-            return await Mediator.Send(input);
+            await Mediator.Send(input);
+            return Ok();
         }
     }
 }

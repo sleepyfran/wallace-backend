@@ -1,6 +1,10 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using NodaMoney;
+using Wallace.Application.Common.Interfaces;
+using Wallace.Domain.Entities;
 
 namespace Wallace.Application.Commands.Setup
 {
@@ -13,7 +17,7 @@ namespace Wallace.Application.Commands.Setup
     /// <summary>
     /// Input given by the user when he finished the setup process.
     /// </summary>
-    public class SetupCommand : IRequest<int>
+    public class SetupCommand : IRequest<(int, int)>
     {
         /// <summary>
         /// Name assigned to the account.
@@ -37,6 +41,11 @@ namespace Wallace.Application.Commands.Setup
         public CategorySelection CategorySelection { get; set; }
         
         /// <summary>
+        /// Name of the user.
+        /// </summary>
+        public string Name { get; set; }
+        
+        /// <summary>
         /// Email of the user used to login.
         /// </summary>
         public string Email { get; set; }
@@ -51,14 +60,38 @@ namespace Wallace.Application.Commands.Setup
     /// Setups the user's profile and creates a basic first account with the
     /// selected base currency.
     /// </summary>
-    public class SetupCommandHandler : IRequestHandler<SetupCommand, int>
+    public class SetupCommandHandler : IRequestHandler<SetupCommand, (int, int)>
     {
-        public Task<int> Handle(
+        private readonly IDbContext _dbContext;
+
+        public SetupCommandHandler(IDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+        
+        public async Task<(int, int)> Handle(
             SetupCommand request, 
             CancellationToken cancellationToken
         )
         {
-            throw new System.NotImplementedException();
+            var user = new User
+            {
+                Email = request.Email,
+                Name = request.Name,
+                Password = request.Password
+            };
+            
+            var account = new Account
+            {
+                Name = request.AccountName,
+                Balance = new Money(request.InitialBalance, request.BaseCurrency),
+                Owner = user
+            };
+
+            _dbContext.Accounts.Add(account);
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            
+            return (user.UserId, account.AccountId);
         }
     }
 }

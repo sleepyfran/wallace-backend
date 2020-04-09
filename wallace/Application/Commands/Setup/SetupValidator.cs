@@ -15,6 +15,10 @@ namespace Wallace.Application.Commands.Setup
                 .MinimumLength(8)
                 .NotEmpty();
 
+            RuleFor(s => s.Name)
+                .MaximumLength(200)
+                .NotEmpty();
+
             RuleFor(s => s.AccountName)
                 .MaximumLength(200)
                 .NotEmpty();

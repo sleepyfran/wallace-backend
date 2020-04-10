@@ -63,10 +63,15 @@ namespace Wallace.Application.Commands.Setup
     public class SetupCommandHandler : IRequestHandler<SetupCommand, (int, int)>
     {
         private readonly IDbContext _dbContext;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public SetupCommandHandler(IDbContext dbContext)
+        public SetupCommandHandler(
+            IDbContext dbContext,
+            IPasswordHasher passwordHasher
+        )
         {
             _dbContext = dbContext;
+            _passwordHasher = passwordHasher;
         }
         
         public async Task<(int, int)> Handle(
@@ -74,11 +79,12 @@ namespace Wallace.Application.Commands.Setup
             CancellationToken cancellationToken
         )
         {
+            var hashedPassword = _passwordHasher.Hash(request.Password);
             var user = new User
             {
                 Email = request.Email,
                 Name = request.Name,
-                Password = request.Password
+                Password = hashedPassword
             };
             
             var account = new Account

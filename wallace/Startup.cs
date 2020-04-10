@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Wallace.Api.Filters;
 using Wallace.Application;
+using Wallace.Infrastructure;
 using Wallace.Persistence;
 
 namespace Wallace
@@ -23,6 +24,8 @@ namespace Wallace
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDataProtection();
+            
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -40,6 +43,7 @@ namespace Wallace
             services
                 .AddApplication()
                 .AddPersistence(Configuration)
+                .AddInfrastructure()
                 .AddControllers();
 
             services.AddControllersWithViews(

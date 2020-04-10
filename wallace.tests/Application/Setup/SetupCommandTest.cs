@@ -1,13 +1,28 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Moq;
 using NodaMoney;
 using NUnit.Framework;
 using Wallace.Application.Commands.Setup;
+using Wallace.Application.Common.Interfaces;
 
 namespace Wallace.Tests.Application
 {
     public class SetupCommandTest : BaseTest
     {
+        private IPasswordHasher _passwordHasher;
+        
+        [SetUp]
+        public void SetUp()
+        {
+            var passwordHasherMock = new Mock<IPasswordHasher>();
+            passwordHasherMock
+                .Setup(ph => ph.Hash(It.IsAny<string>()))
+                .Returns((string i) => i);
+            
+            _passwordHasher = passwordHasherMock.Object;
+        }
+        
         [Test]
         public async Task Handle_ShouldPersistValidInput()
         {
@@ -22,7 +37,7 @@ namespace Wallace.Tests.Application
                 InitialBalance = 1000
             };
             
-            var handler = new SetupCommandHandler(DbContext);
+            var handler = new SetupCommandHandler(DbContext, _passwordHasher);
             var (userId, accountId) = await handler.Handle(command, CancellationToken.None);
 
             var user = DbContext.Users.Find(userId);

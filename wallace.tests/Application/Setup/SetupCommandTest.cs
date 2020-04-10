@@ -6,7 +6,7 @@ using Wallace.Application.Commands.Setup;
 
 namespace Wallace.Tests.Application
 {
-    public class SetupCommandTest : BaseCommandTest
+    public class SetupCommandTest : BaseTest
     {
         [Test]
         public async Task Handle_ShouldPersistValidInput()

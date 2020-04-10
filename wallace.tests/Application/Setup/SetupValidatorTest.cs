@@ -1,17 +1,21 @@
+using System.Threading;
+using System.Threading.Tasks;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using Wallace.Application.Commands.Setup;
+using Wallace.Domain.Entities;
 
 namespace Wallace.Tests.Application
 {
-    public class SetupValidatorTest
+    public class SetupValidatorTest : BaseTest
     {
         private SetupValidator _validator;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new SetupValidator();
+            base.SetUp();
+            _validator = new SetupValidator(DbContext);
         }
 
         #region Email
@@ -31,6 +35,18 @@ namespace Wallace.Tests.Application
             _validator.ShouldHaveValidationErrorFor(
                 c => c.Email,
                 input
+            );
+        }
+
+        [Test]
+        public async Task ShouldErrorWithDuplicatedEmail()
+        {
+            DbContext.Users.Add(new User {Email = "test@test.com"});
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+
+            _validator.ShouldHaveValidationErrorFor(
+                c => c.Email,
+                "test@test.com"
             );
         }
 

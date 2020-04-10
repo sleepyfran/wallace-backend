@@ -6,7 +6,7 @@ using Wallace.Persistence;
 
 namespace Wallace.Tests.Application
 {
-    public class BaseCommandTest
+    public class BaseTest
     {
         protected bool ReloadOnSetUp = true;
         protected IDbContext DbContext;

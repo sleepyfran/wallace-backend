@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Wallace.Api.Filters;
 using Wallace.Application;
+using Wallace.Domain;
 using Wallace.Infrastructure;
 using Wallace.Persistence;
 
@@ -41,6 +42,7 @@ namespace Wallace
                 });
 
             services
+                .AddDomain()
                 .AddApplication()
                 .AddPersistence(Configuration)
                 .AddInfrastructure()
@@ -60,6 +62,7 @@ namespace Wallace
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

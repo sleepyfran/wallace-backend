@@ -1,15 +1,14 @@
 using System.Linq;
 using FluentValidation;
 using Wallace.Application.Common.Interfaces;
-using Wallace.Application.Common.Validators;
 
-namespace Wallace.Application.Commands.Setup
+namespace Wallace.Application.Commands.Auth.SignUp
 {
-    public class SetupValidator : AbstractValidator<SetupCommand>
+    public class SignUpValidator : AbstractValidator<SignUpCommand>
     {
         private readonly IDbContext _dbContext;
 
-        public SetupValidator(IDbContext dbContext)
+        public SignUpValidator(IDbContext dbContext)
         {
             _dbContext = dbContext;
             
@@ -26,22 +25,8 @@ namespace Wallace.Application.Commands.Setup
             RuleFor(s => s.Name)
                 .MaximumLength(200)
                 .NotEmpty();
-
-            RuleFor(s => s.AccountName)
-                .MaximumLength(200)
-                .NotEmpty();
-
-            RuleFor(s => s.BaseCurrency)
-                .MustBeValidCurrency()
-                .NotEmpty();
-
-            RuleFor(s => s.CategorySelection)
-                .NotNull();
-
-            RuleFor(s => s.InitialBalance)
-                .GreaterThan(0);
         }
-
+        
         private bool BeUniqueEmail(string email)
         {
             return !_dbContext.Users

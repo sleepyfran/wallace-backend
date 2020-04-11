@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Wallace.Domain.Exceptions;
 
 namespace Wallace.Api.Filters
 {
@@ -16,7 +18,17 @@ namespace Wallace.Api.Filters
         {
             _handlers = new Dictionary<Type, Action<ExceptionContext>>
             {
-                [typeof(ValidationException)] = HandleValidationException
+                [typeof(ValidationException)] = HandleValidationException,
+                [typeof(UserNotFoundException)] = context => 
+                    HandleCodeResultException(
+                        context,
+                        StatusCodes.Status404NotFound
+                    ),
+                [typeof(InvalidCredentialException)] = context => 
+                    HandleCodeResultException(
+                        context,
+                        StatusCodes.Status401Unauthorized
+                    )
             };
         }
 
@@ -53,6 +65,19 @@ namespace Wallace.Api.Filters
             };
 
             context.Result = new BadRequestObjectResult(details);
+            context.ExceptionHandled = true;
+        }
+
+        /// <summary>
+        /// Generic handler for all exceptions that simply need to return a
+        /// custom status code.
+        /// </summary>
+        private void HandleCodeResultException(
+            ExceptionContext context,
+            int resultCode
+        )
+        {
+            context.Result = new StatusCodeResult(resultCode);
             context.ExceptionHandled = true;
         }
 

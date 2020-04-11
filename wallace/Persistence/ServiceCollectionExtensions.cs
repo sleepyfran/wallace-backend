@@ -8,7 +8,10 @@ namespace Wallace.Persistence
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddPersistence(
+            this IServiceCollection services,
+            IConfiguration configuration
+        )
         {
             services
                 .AddDbContext<WallaceDbContext>(options =>
@@ -16,7 +19,9 @@ namespace Wallace.Persistence
                     options.UseNpgsql(configuration.GetConnectionString("WallaceDb"));
                 });
 
-            services.AddScoped<IDbContext>(provider => provider.GetService<WallaceDbContext>());
+            services.AddScoped<IDbContext>(provider => 
+                provider.GetService<WallaceDbContext>()
+            );
 
             return services;
         }

@@ -8,7 +8,7 @@ namespace Wallace.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            services.AddTransient(typeof(IPasswordHasher), typeof(PasswordHasher));
+            services.AddTransient<IPasswordHasher, PasswordHasher>();
             services.AddTransient<IDateTime, DateTime>();
             return services;
 ;       }

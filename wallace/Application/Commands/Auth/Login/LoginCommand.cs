@@ -11,7 +11,7 @@ using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Auth.Login
 {
-    public class LoginCommand : IRequest<Token>
+    public class LoginCommand : IRequest<(Token, Token)>
     {
         /// <summary>
         /// Email of the user used to login.
@@ -27,7 +27,7 @@ namespace Wallace.Application.Commands.Auth.Login
     /// <summary>
     /// Checks user's credentials and returns a token for API calls.
     /// </summary>
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, Token>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, (Token, Token)>
     {
         private readonly IDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
@@ -44,7 +44,7 @@ namespace Wallace.Application.Commands.Auth.Login
             _tokenBuilder = tokenBuilder;
         }
         
-        public async Task<Token> Handle(
+        public async Task<(Token, Token)> Handle(
             LoginCommand request,
             CancellationToken cancellationToken
         )
@@ -66,7 +66,10 @@ namespace Wallace.Application.Commands.Auth.Login
             if (!passwordMatches)
                 throw new InvalidCredentialException();
 
-            return _tokenBuilder.BuildAccessToken(existingUser);
+            return (
+                _tokenBuilder.BuildAccessToken(existingUser),
+                _tokenBuilder.BuildRefreshToken(existingUser)
+            );
         }
     }
 }

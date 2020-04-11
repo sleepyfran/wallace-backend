@@ -7,6 +7,7 @@ using Wallace.Domain.Entities;
 using Wallace.Domain.Identity.Entities;
 using Wallace.Domain.Identity.Interfaces;
 using Wallace.Domain.Common.Interfaces;
+using Wallace.Domain.ValueObjects;
 
 namespace Wallace.Domain.Identity
 {
@@ -23,14 +24,30 @@ namespace Wallace.Domain.Identity
             _configuration = configuration;
             _dateTime = dateTime;
         }
-        
+
         public Token BuildAccessToken(User user)
         {
-            var lifetime = _configuration.TokenLifetime;
-            
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
+            return BuildToken(
+                user,
+                _configuration.TokenLifetime,
+                _configuration.Key
+            );
+        }
+
+        public Token BuildRefreshToken(User user)
+        {
+            return BuildToken(
+                user,
+                _configuration.RefreshTokenLifetime.Minutes,
+                _configuration.RefreshKey
+            );
+        }
+        
+        private Token BuildToken(User user, Minutes expiresIn, string tokenKey)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
-            var expires = _dateTime.UtcNow.AddMinutes(lifetime);
+            var expires = _dateTime.UtcNow.AddMinutes(expiresIn);
 
             var jwtToken = new JwtSecurityToken(
                 _configuration.Issuer,
@@ -46,7 +63,7 @@ namespace Wallace.Domain.Identity
             var strToken = new JwtSecurityTokenHandler()
                 .WriteToken(jwtToken);
 
-            return new Token(strToken) { Lifetime = lifetime };
+            return new Token(strToken) { Lifetime = expiresIn };
         }
     }
 }

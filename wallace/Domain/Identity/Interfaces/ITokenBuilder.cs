@@ -12,5 +12,10 @@ namespace Wallace.Domain.Identity.Interfaces
         /// Creates a JWT token for a given user.
         /// </summary>
         Token BuildAccessToken(User user);
+
+        /// <summary>
+        /// Creates a JWT refresh token for a given user.
+        /// </summary>
+        Token BuildRefreshToken(User user);
     }
 }

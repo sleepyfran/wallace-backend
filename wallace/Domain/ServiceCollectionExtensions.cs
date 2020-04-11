@@ -12,7 +12,9 @@ namespace Wallace.Domain
         )
         {
             services.AddSingleton<JwtConfiguration>();
+            services.AddTransient<ITokenData, TokenData>();
             services.AddTransient<ITokenBuilder, TokenBuilder>();
+            services.AddTransient<ITokenChecker, TokenChecker>();
 
             return services;
         }

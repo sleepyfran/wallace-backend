@@ -8,7 +8,7 @@ using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Auth.SignUp
 {
-    public class SignUpCommand : IRequest<Token>
+    public class SignUpCommand : IRequest<(Token, Token)>
     {
         /// <summary>
         /// Name of the user.
@@ -30,7 +30,7 @@ namespace Wallace.Application.Commands.Auth.SignUp
     /// Creates a new user and returns a JWT token for authenticating future
     /// API calls.
     /// </summary>
-    public class SignUpCommandHandler : IRequestHandler<SignUpCommand, Token>
+    public class SignUpCommandHandler : IRequestHandler<SignUpCommand, (Token, Token)>
     {
         private readonly IDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
@@ -47,7 +47,7 @@ namespace Wallace.Application.Commands.Auth.SignUp
             _tokenBuilder = tokenBuilder;
         }
         
-        public async Task<Token> Handle(
+        public async Task<(Token, Token)> Handle(
             SignUpCommand request,
             CancellationToken cancellationToken
         )
@@ -63,7 +63,10 @@ namespace Wallace.Application.Commands.Auth.SignUp
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return _tokenBuilder.BuildAccessToken(user);
+            return (
+                _tokenBuilder.BuildAccessToken(user),
+                _tokenBuilder.BuildRefreshToken(user)
+            );
         }
     }
 }

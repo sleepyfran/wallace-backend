@@ -1,5 +1,8 @@
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Interfaces;
 
 namespace Wallace.Application.Commands.Auth.SignUp
@@ -15,7 +18,9 @@ namespace Wallace.Application.Commands.Auth.SignUp
             RuleFor(s => s.Email)
                 .EmailAddress()
                 .NotEmpty()
-                .Must(BeUniqueEmail)
+                .MustAsync(async (e, ct) => 
+                    await BeUniqueEmail(e, ct)
+                )
                 .WithMessage("This email is already in use by another user");
 
             RuleFor(s => s.Password)
@@ -27,10 +32,18 @@ namespace Wallace.Application.Commands.Auth.SignUp
                 .NotEmpty();
         }
         
-        private bool BeUniqueEmail(string email)
+        private async Task<bool> BeUniqueEmail(
+            string email,
+            CancellationToken cancellationToken
+        )
         {
-            return !_dbContext.Users
-                .Any(u => u.Email == email);
+            var exists = await _dbContext.Users
+                .AnyAsync(
+                    u => u.Email == email,
+                    cancellationToken
+                );
+
+            return !exists;
         }
     }
 }

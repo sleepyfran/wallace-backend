@@ -11,12 +11,19 @@ namespace Wallace.Domain
             this IServiceCollection services
         )
         {
-            services.AddSingleton<JwtConfiguration>();
-            services.AddTransient<ITokenData, TokenData>();
-            services.AddTransient<ITokenBuilder, TokenBuilder>();
-            services.AddTransient<ITokenChecker, TokenChecker>();
-
-            return services;
+            return services
+                .AddSingleton<JwtConfiguration>()
+                .AddTransient<ITokenData, TokenData>()
+                .AddTransient<ITokenBuilder, TokenBuilder>()
+                .AddTransient<ITokenChecker, TokenChecker>()
+                .AddScoped<IIdentityLoader, IdentityLoader>()
+                .AddScoped<IdentityContainer>()
+                .AddScoped<IIdentityAccessor>(s =>
+                    s.GetRequiredService<IdentityContainer>()
+                )
+                .AddScoped<IIdentitySetter>(s =>
+                    s.GetRequiredService<IdentityContainer>()
+                );
         }
     }
 }

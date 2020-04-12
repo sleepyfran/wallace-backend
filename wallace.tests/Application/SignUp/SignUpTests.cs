@@ -40,6 +40,10 @@ namespace Wallace.Tests.Application.SignUp
                 .Setup(tb => tb.BuildAccessToken(It.IsAny<User>()))
                 .Returns((User u) => new Token(u.Email) { Lifetime = 10});
             
+            tokenBuilderMock
+                .Setup(tb => tb.BuildRefreshToken(It.IsAny<User>()))
+                .Returns((User u) => new Token(u.Email) { Lifetime = 10});
+            
             _handler = new SignUpCommandHandler(
                 DbContext,
                 passwordHasherMock.Object,
@@ -73,14 +77,18 @@ namespace Wallace.Tests.Application.SignUp
         [Test]
         public async Task Handle_ShouldCreateValidToken()
         {
-            var tokenResult = await _handler.Handle(
+            var (accessToken, refreshToken) = await _handler.Handle(
                 _validInput,
                 CancellationToken.None
             );
             
-            Assert.IsNotNull(tokenResult);
-            Assert.AreEqual(_validInput.Email, (string)tokenResult);
-            Assert.AreEqual(10, (int)tokenResult.Lifetime);
+            Assert.IsNotNull(accessToken);
+            Assert.AreEqual(_validInput.Email, (string)accessToken);
+            Assert.AreEqual(10, (int)accessToken.Lifetime);
+            
+            Assert.IsNotNull(refreshToken);
+            Assert.AreEqual(_validInput.Email, (string)refreshToken);
+            Assert.AreEqual(10, (int)refreshToken.Lifetime);
         }
     }
 }

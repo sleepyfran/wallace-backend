@@ -50,6 +50,10 @@ namespace Wallace.Tests.Application.Login
                 .Setup(tb => tb.BuildAccessToken(It.IsAny<User>()))
                 .Returns((User u) => new Token(u.Email) { Lifetime = 10});
             
+            tokenBuilderMock
+                .Setup(tb => tb.BuildRefreshToken(It.IsAny<User>()))
+                .Returns((User u) => new Token(u.Email) { Lifetime = 10});
+            
             _handler = new LoginCommandHandler(
                 DbContext,
                 passwordHasherMock.Object,
@@ -58,16 +62,20 @@ namespace Wallace.Tests.Application.Login
         }
         
         [Test]
-        public async Task Handle_ShouldReturnValidTokenGivenValidInput()
+        public async Task Handle_ShouldReturnValidTokensGivenValidInput()
         {
             DbContext.Users.Add(_testUser);
             await DbContext.SaveChangesAsync(CancellationToken.None);
             
-            var token = await _handler.Handle(_input, CancellationToken.None);
+            var (accessToken, refreshToken) = await _handler.Handle(_input, CancellationToken.None);
             
-            Assert.IsNotNull(token);
-            Assert.AreEqual(_input.Email, (string)token);
-            Assert.AreEqual(10, (int)token.Lifetime);
+            Assert.IsNotNull(accessToken);
+            Assert.AreEqual(_input.Email, (string)accessToken);
+            Assert.AreEqual(10, (int)accessToken.Lifetime);
+            
+            Assert.IsNotNull(refreshToken);
+            Assert.AreEqual(_input.Email, (string)refreshToken);
+            Assert.AreEqual(10, (int)refreshToken.Lifetime);
         }
 
         [Test]

@@ -13,22 +13,21 @@ namespace Wallace.Application
             this IServiceCollection services
         )
         {
-            services.AddValidators(Assembly.GetExecutingAssembly());
-            services.AddTransient(
-                typeof(IPipelineBehavior<,>),
-                typeof(RequestValidationBehavior<,>)
-            );
-            services.AddMediatR(Assembly.GetExecutingAssembly());
-
-            return services;
+            return services
+                .AddValidators(Assembly.GetExecutingAssembly())
+                .AddTransient(
+                    typeof(IPipelineBehavior<,>),
+                    typeof(RequestValidationBehavior<,>)
+                )
+                .AddMediatR(Assembly.GetExecutingAssembly());
         }
-        
+
         /// <summary>
         /// Adds all the validators from all the commands and queries as a
         /// transient service.
         /// </summary>
         public static IServiceCollection AddValidators(
-            this IServiceCollection services, 
+            this IServiceCollection services,
             Assembly assembly
         )
         {
@@ -37,8 +36,8 @@ namespace Wallace.Application
             var validatorTypes = assembly
                 .GetExportedTypes()
                 .Where(t => t.GetInterfaces().Any(i =>
-                    i.IsGenericType &&
-                    i.GetGenericTypeDefinition() == validatorType
+                        i.IsGenericType &&
+                        i.GetGenericTypeDefinition() == validatorType
                     )
                 )
                 .ToList();
@@ -47,7 +46,8 @@ namespace Wallace.Application
             {
                 var requestType = validator.GetInterfaces()
                     .Where(i => i.IsGenericType &&
-                                i.GetGenericTypeDefinition() == typeof(IValidator<>))
+                                i.GetGenericTypeDefinition() ==
+                                typeof(IValidator<>))
                     .Select(i => i.GetGenericArguments()[0])
                     .First();
 

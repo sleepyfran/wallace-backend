@@ -6,11 +6,13 @@ namespace Wallace.Infrastructure
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(
+            this IServiceCollection services
+        )
         {
-            services.AddTransient<IPasswordHasher, PasswordHasher>();
-            services.AddTransient<IDateTime, DateTime>();
-            return services;
-;       }
+            return services
+                .AddTransient<IPasswordHasher, PasswordHasher>()
+                .AddTransient<IDateTime, DateTime>();
+        }
     }
 }

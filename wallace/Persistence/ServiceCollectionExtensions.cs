@@ -13,17 +13,15 @@ namespace Wallace.Persistence
             IConfiguration configuration
         )
         {
-            services
+            return services
                 .AddDbContext<WallaceDbContext>(options =>
                 {
-                    options.UseNpgsql(configuration.GetConnectionString("WallaceDb"));
-                });
-
-            services.AddScoped<IDbContext>(provider => 
-                provider.GetService<WallaceDbContext>()
-            );
-
-            return services;
+                    options.UseNpgsql(
+                        configuration.GetConnectionString("WallaceDb"));
+                })
+                .AddScoped<IDbContext>(provider =>
+                    provider.GetService<WallaceDbContext>()
+                );
         }
     }
 }

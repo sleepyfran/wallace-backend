@@ -56,7 +56,7 @@ namespace Wallace.Domain.Identity
                 signingCredentials: credentials,
                 claims: new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
                 }
             );
 

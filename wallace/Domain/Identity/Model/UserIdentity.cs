@@ -1,3 +1,4 @@
+using System;
 using Wallace.Domain.Identity.Enums;
 
 namespace Wallace.Domain.Identity.Model
@@ -7,7 +8,7 @@ namespace Wallace.Domain.Identity.Model
     /// </summary>
     public class UserIdentity : IIdentity
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public IdentityType Type => IdentityType.User;
     }
 }

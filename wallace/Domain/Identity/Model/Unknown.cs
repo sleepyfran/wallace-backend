@@ -1,3 +1,4 @@
+using System;
 using Wallace.Domain.Identity.Enums;
 
 namespace Wallace.Domain.Identity.Model
@@ -11,7 +12,7 @@ namespace Wallace.Domain.Identity.Model
     /// </summary>
     public class Unknown : IIdentity
     {
-        public int Id => -1;
+        public Guid Id => Guid.Empty;
         public IdentityType Type => IdentityType.Unknown;
     }
 

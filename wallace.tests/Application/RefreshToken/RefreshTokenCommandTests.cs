@@ -16,13 +16,13 @@ namespace Wallace.Tests.Application.RefreshToken
     {
         private User _testUser = new User
         {
-            UserId = 1,
+            Id = Guid.NewGuid(),
             Email = "test@test.com"
         };
         private DateTime _now;
         private RefreshTokenCommandHandler _handler;
         private bool _tokenCheckerResult;
-        private int? _tokenDataResult;
+        private Guid _tokenDataResult;
 
         [SetUp]
         public new void SetUp()
@@ -31,7 +31,7 @@ namespace Wallace.Tests.Application.RefreshToken
             
             _now = DateTime.Now;
             _tokenCheckerResult = true;
-            _tokenDataResult = 1;
+            _tokenDataResult = Guid.Empty;
 
             var tokenDataMock = new Mock<ITokenData>();
             tokenDataMock
@@ -67,6 +67,8 @@ namespace Wallace.Tests.Application.RefreshToken
         [Test]
         public async Task Handle_ShouldRefreshTokenGivenValidInput()
         {
+            _tokenDataResult = _testUser.Id;
+            
             DbContext.Users.Add(_testUser);
             await DbContext.SaveChangesAsync(CancellationToken.None);
             
@@ -95,7 +97,7 @@ namespace Wallace.Tests.Application.RefreshToken
         [Test]
         public void Handle_ShouldThrowExceptionWhenTokenIdDoesNotExistInToken()
         {
-            _tokenDataResult = null;
+            _tokenDataResult = Guid.Empty;
 
             Assert.ThrowsAsync<InvalidCredentialException>(async () =>
                 await _handler.Handle(

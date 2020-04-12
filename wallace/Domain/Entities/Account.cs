@@ -9,11 +9,11 @@ namespace Wallace.Domain.Entities
     /// </summary>
     public class Account
     {
-        public int AccountId { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public Money Balance { get; set; }
         
-        public int OwnerId { get; set; }
+        public Guid OwnerId { get; set; }
         public User Owner { get; set; }
         
         public List<Transaction> Transactions { get; set; }

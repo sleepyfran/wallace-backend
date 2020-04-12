@@ -9,20 +9,20 @@ namespace Wallace.Domain.Entities
     /// </summary>
     public class Transaction
     {
-        public int TransactionId { get; set; }
+        public Guid Id { get; set; }
         public TransactionType Type { get; set; }
         public Repetition Repetition { get; set; }
         public Money Amount { get; set; }
         public DateTime Date { get; set; }
         public string Notes { get; set; }
 
-        public int AccountId { get; set; }
+        public Guid AccountId { get; set; }
         public Account Account { get; set; }
         
-        public int CategoryId { get; set; }
+        public Guid CategoryId { get; set; }
         public Category Category { get; set; }
         
-        public int PayeeId { get; set; }
+        public Guid PayeeId { get; set; }
         public Payee Payee { get; set; }
     }
 }

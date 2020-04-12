@@ -1,3 +1,4 @@
+using System;
 using Wallace.Domain.Identity.Entities;
 
 namespace Wallace.Domain.Identity.Interfaces
@@ -7,6 +8,6 @@ namespace Wallace.Domain.Identity.Interfaces
     /// </summary>
     public interface ITokenData
     {
-        int? GetUserIdFrom(Token token);
+        Guid GetUserIdFrom(Token token);
     }
 }

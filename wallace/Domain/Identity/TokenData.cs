@@ -1,3 +1,4 @@
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -8,20 +9,18 @@ namespace Wallace.Domain.Identity
 {
     public class TokenData : ITokenData
     {
-        public int? GetUserIdFrom(Token token)
+        public Guid GetUserIdFrom(Token token)
         {
             var jwtToken = new JwtSecurityTokenHandler()
                 .ReadJwtToken(token);
 
             return jwtToken.Claims
                 .Where(c => c.Type == ClaimTypes.NameIdentifier)
-                .Select(c =>
-                {
-                    if (int.TryParse(c.Value, out var id))
-                        return id;
-
-                    return (int?)null;
-                })
+                .Select(c => 
+                    Guid.TryParse(c.Value, out var id) 
+                        ? id 
+                        : Guid.Empty
+                )
                 .FirstOrDefault();
         }
     }

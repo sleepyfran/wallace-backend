@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -26,7 +27,7 @@ namespace Wallace.Domain.Identity
                 return;
             }
 
-            if (!int.TryParse(userClaim.Value, out var userId))
+            if (!Guid.TryParse(userClaim.Value, out var userId))
             {
                 _identitySetter.Set(Unknown);
                 return;

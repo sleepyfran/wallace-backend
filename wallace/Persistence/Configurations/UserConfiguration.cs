@@ -23,11 +23,6 @@ namespace Wallace.Persistence.Configurations
 
             builder
                 .HasIndex(u => u.Email);
-
-            builder
-                .HasMany(u => u.Accounts)
-                .WithOne(a => a.Owner)
-                .HasForeignKey(u => u.AccountId);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -9,7 +10,7 @@ using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Accounts.CreateAccount
 {
-    public class CreateAccountCommand : IRequest<int>
+    public class CreateAccountCommand : IRequest<Guid>
     {
         /// <summary>
         /// Name assigned to the account.
@@ -27,7 +28,7 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
         public string Currency { get; set; }
     }
 
-    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, int>
+    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Guid>
     {
         private readonly IDbContext _dbContext;
         private readonly IIdentityAccessor _identityAccessor;
@@ -41,7 +42,7 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
             _identityAccessor = identityAccessor;
         }
     
-        public async Task<int> Handle(
+        public async Task<Guid> Handle(
             CreateAccountCommand request,
             CancellationToken cancellationToken
         )
@@ -51,13 +52,13 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
             {
                 Name = request.Name,
                 Balance = new Money(request.Balance, request.Currency),
-                Owner = user
+                OwnerId = user.Id
             };
 
             _dbContext.Accounts.Add(account);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return account.AccountId;
+            return account.Id;
         }
     }
 }

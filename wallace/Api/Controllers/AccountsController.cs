@@ -13,7 +13,11 @@ namespace Wallace.Api.Controllers
         public async Task<ActionResult> CreateAccount(CreateAccountCommand input)
         {
             var accountId = await Mediator.Send(input);
-            var location = Url.Action("GetAccount");
+            var location = Url.Action(
+                "GetAccount",
+                "Accounts",
+                new { id = accountId }
+            );
             return Created(location, accountId);
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Wallace.Domain.Entities
@@ -7,7 +8,7 @@ namespace Wallace.Domain.Entities
     /// </summary>
     public class Payee
     {
-        public int PayeeId { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         
         public List<Transaction> Transactions { get; set; }

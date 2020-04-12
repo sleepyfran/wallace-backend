@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NodaMoney;
@@ -36,12 +37,12 @@ namespace Wallace.Tests.Application.Account.CreateAccount
         {
             var owner = new User
             {
-                UserId = 1
+                Id = Guid.NewGuid()
             };
             DbContext.Users.Add(owner);
             await DbContext.SaveChangesAsync(CancellationToken.None);
             
-            _identityContainer.Set(new UserIdentity { Id = owner.UserId });
+            _identityContainer.Set(new UserIdentity { Id = owner.Id });
             
             var accountId = await _handler.Handle(
                 _validInput,
@@ -53,7 +54,7 @@ namespace Wallace.Tests.Application.Account.CreateAccount
             Assert.IsNotNull(account);
             Assert.AreEqual("Test", account.Name);
             Assert.AreEqual(Money.Euro(1000), account.Balance);
-            Assert.AreEqual(owner.UserId, account.Owner.UserId);
+            Assert.AreEqual(owner.Id, account.Owner.Id);
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Wallace.Application.Commands.Auth.Refresh
 
             var user = await _dbContext.Users
                 .FirstOrDefaultAsync(
-                    u => u.UserId == tokenUserId,
+                    u => u.Id == tokenUserId,
                     cancellationToken
                 );
             

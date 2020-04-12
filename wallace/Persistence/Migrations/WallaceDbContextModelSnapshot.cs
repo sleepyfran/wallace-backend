@@ -21,8 +21,9 @@ namespace Wallace.Persistence.Migrations
 
             modelBuilder.Entity("Wallace.Domain.Entities.Account", b =>
                 {
-                    b.Property<int>("AccountId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Balance")
                         .IsRequired()
@@ -32,20 +33,21 @@ namespace Wallace.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
 
-                    b.HasKey("AccountId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("Wallace.Domain.Entities.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("uuid");
 
                     b.Property<string>("IconUrl")
                         .IsRequired()
@@ -55,43 +57,41 @@ namespace Wallace.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("CategoryId");
+                    b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Wallace.Domain.Entities.Payee", b =>
                 {
-                    b.Property<int>("PayeeId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("PayeeId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Payee");
+                    b.ToTable("Payees");
                 });
 
             modelBuilder.Entity("Wallace.Domain.Entities.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("uuid");
 
-                    b.Property<int>("AccountId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("AccountId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Amount")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp without time zone");
@@ -101,8 +101,8 @@ namespace Wallace.Persistence.Migrations
                         .HasColumnType("text")
                         .HasDefaultValue("");
 
-                    b.Property<int>("PayeeId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("PayeeId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("Repetition")
                         .ValueGeneratedOnAdd()
@@ -112,7 +112,7 @@ namespace Wallace.Persistence.Migrations
                     b.Property<int>("Type")
                         .HasColumnType("integer");
 
-                    b.HasKey("TransactionId");
+                    b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
@@ -120,15 +120,14 @@ namespace Wallace.Persistence.Migrations
 
                     b.HasIndex("PayeeId");
 
-                    b.ToTable("Transaction");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("Wallace.Domain.Entities.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -142,7 +141,7 @@ namespace Wallace.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("Email");
 
@@ -153,7 +152,7 @@ namespace Wallace.Persistence.Migrations
                 {
                     b.HasOne("Wallace.Domain.Entities.User", "Owner")
                         .WithMany("Accounts")
-                        .HasForeignKey("AccountId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

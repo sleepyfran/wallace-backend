@@ -83,6 +83,8 @@ namespace Wallace.Api.Filters
 
         private void HandleServerError(ExceptionContext context)
         {
+            Console.WriteLine(context.Exception);
+            
             context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
         }
     }

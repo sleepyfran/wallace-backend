@@ -2,7 +2,7 @@ using FluentValidation.TestHelper;
 using NUnit.Framework;
 using Wallace.Application.Commands.Accounts.CreateAccount;
 
-namespace Wallace.Tests.Application.Account.CreateAccount
+namespace Wallace.Tests.Application.Accounts.CreateAccount
 {
     public class CreateAccountValidatorTests
     {

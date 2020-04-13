@@ -8,7 +8,7 @@ using Wallace.Domain.Entities;
 using Wallace.Domain.Identity.Interfaces;
 using Wallace.Domain.Identity.Model;
 
-namespace Wallace.Tests.Application.Account.CreateAccount
+namespace Wallace.Tests.Application.Accounts.CreateAccount
 {
     public class CreateAccountTests : BaseTest
     {

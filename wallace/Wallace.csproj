@@ -22,7 +22,6 @@
   <ItemGroup>
     <Folder Include="Api\" />
     <Folder Include="Api\Controllers\" />
-    <Folder Include="Application\Queries" />
     <Folder Include="Domain\" />
     <Folder Include="Application\" />
     <Folder Include="Domain\Common" />

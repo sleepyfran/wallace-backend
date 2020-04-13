@@ -24,6 +24,11 @@ namespace Wallace.Api.Filters
                         context,
                         StatusCodes.Status404NotFound
                     ),
+                [typeof(AccountNotFoundException)] = context => 
+                    HandleCodeResultException(
+                        context,
+                        StatusCodes.Status404NotFound
+                    ),
                 [typeof(InvalidCredentialException)] = context => 
                     HandleCodeResultException(
                         context,

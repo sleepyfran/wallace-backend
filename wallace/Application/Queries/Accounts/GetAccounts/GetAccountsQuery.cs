@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Domain.Identity.Interfaces;
 
@@ -37,9 +38,10 @@ namespace Wallace.Application.Queries.Accounts.GetAccounts
         {
             var userId = _identityAccessor.Get().Id;
 
-            return _dbContext.Accounts
+            return await _dbContext.Accounts
                 .Where(a => a.OwnerId == userId)
-                .ProjectTo<AccountDto>(_mapper.ConfigurationProvider);
+                .ProjectTo<AccountDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
         }
     }
 }

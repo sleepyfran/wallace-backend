@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using FluentValidation;
 using FluentValidation.TestHelper;
 
-namespace Wallace.Tests.Application
+namespace Wallace.Tests
 {
     public static class ValidatorTestExtensions
     {

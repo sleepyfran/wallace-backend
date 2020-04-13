@@ -30,6 +30,7 @@ namespace Wallace.Tests.Application.Mappings
         
         [Test]
         [TestCase(typeof(Account), typeof(AccountDto))]
+        [TestCase(typeof(AccountDto), typeof(Account))]
         public void ShouldSupportMappingFrom(Type from, Type to)
         {
             var instance = Activator.CreateInstance(from);

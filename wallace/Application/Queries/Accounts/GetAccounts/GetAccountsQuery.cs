@@ -13,6 +13,9 @@ namespace Wallace.Application.Queries.Accounts.GetAccounts
 {
     public class GetAccountsQuery : IRequest<IEnumerable<AccountDto>> { }
 
+    /// <summary>
+    /// Retrieves all the accounts associated to the current logged in user.
+    /// </summary>
     public class GetAccountsQueryHandler 
         : IRequestHandler<GetAccountsQuery, IEnumerable<AccountDto>>
     {

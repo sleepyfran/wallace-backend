@@ -15,6 +15,10 @@ namespace Wallace.Application.Queries.Accounts.GetAccount
         public Guid Id { get; set; }
     }
     
+    /// <summary>
+    /// Retrieves an specific account given its ID only if it belongs to the
+    /// current logged in user.
+    /// </summary>
     public class GetAccountQueryHandler : IRequestHandler<GetAccountQuery, AccountDto>
     {
         private readonly IDbContext _dbContext;

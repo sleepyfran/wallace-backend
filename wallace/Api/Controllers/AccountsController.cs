@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wallace.Application.Commands.Accounts.CreateAccount;
 using Wallace.Application.Queries.Accounts.GetAccount;
+using Wallace.Application.Queries.Accounts.GetAccounts;
 
 namespace Wallace.Api.Controllers
 {
@@ -26,6 +27,17 @@ namespace Wallace.Api.Controllers
                 new { id = accountId }
             );
             return Created(location, accountId);
+        }
+
+        /// <summary>
+        /// Retrieves all the accounts of the current logged in user.
+        /// </summary>
+        /// <returns></returns>
+        [Route("")]
+        [HttpGet]
+        public async Task<ActionResult> GetAccounts()
+        {
+            return Ok(await Mediator.Send(new GetAccountsQuery()));
         }
 
         /// <summary>

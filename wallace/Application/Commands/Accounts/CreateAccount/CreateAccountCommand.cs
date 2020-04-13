@@ -47,7 +47,8 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
             CancellationToken cancellationToken
         )
         {
-            var user = _dbContext.Users.Find(_identityAccessor.Get().Id);
+            var user = await _dbContext.Users
+                .FindAsync(_identityAccessor.Get().Id);
             var account = new Account
             {
                 Name = request.Name,

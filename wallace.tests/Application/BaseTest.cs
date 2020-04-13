@@ -1,7 +1,9 @@
 using System;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Wallace.Application.Common.Interfaces;
+using Wallace.Application.Common.Mappings;
 using Wallace.Persistence;
 
 namespace Wallace.Tests.Application
@@ -10,6 +12,7 @@ namespace Wallace.Tests.Application
     {
         protected bool ReloadOnSetUp = true;
         protected IDbContext DbContext;
+        protected IMapper Mapper;
         
         private void CreateContext()
         {
@@ -18,6 +21,13 @@ namespace Wallace.Tests.Application
                 .Options;
             
             DbContext = new WallaceDbContext(options);
+            
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile<MappingProfile>();
+            });
+
+            Mapper = configuration.CreateMapper();
         }
 
         [SetUp]

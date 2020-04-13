@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +20,8 @@ namespace Wallace.Application
                     typeof(IPipelineBehavior<,>),
                     typeof(RequestValidationBehavior<,>)
                 )
-                .AddMediatR(Assembly.GetExecutingAssembly());
+                .AddMediatR(Assembly.GetExecutingAssembly())
+                .AddAutoMapper(Assembly.GetExecutingAssembly());
         }
 
         /// <summary>

@@ -1,11 +1,12 @@
 using FluentValidation;
+using Wallace.Application.Common.Dto;
 using Wallace.Application.Common.Validators;
 
-namespace Wallace.Application.Commands.Accounts.CreateAccount
+namespace Wallace.Application.Commands.Accounts
 {
-    public class CreateAccountValidator : AbstractValidator<CreateAccountCommand>
+    public class AccountValidator : AbstractValidator<AccountDto>
     {
-        public CreateAccountValidator()
+        public AccountValidator()
         {
             RuleFor(s => s.Name)
                 .MaximumLength(200)

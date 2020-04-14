@@ -4,11 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using NodaMoney;
 using NUnit.Framework;
-using Wallace.Application.Queries.Accounts.GetAccount;
+using Wallace.Application.Queries.Accounts;
 using Wallace.Domain.Entities;
 using Wallace.Domain.Exceptions;
-using Wallace.Domain.Identity.Interfaces;
-using Wallace.Domain.Identity.Model;
 
 namespace Wallace.Tests.Application.Accounts.GetAccount
 {

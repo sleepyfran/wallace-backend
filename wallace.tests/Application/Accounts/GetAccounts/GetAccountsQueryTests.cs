@@ -1,10 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using Wallace.Application.Queries.Accounts.GetAccounts;
+using Wallace.Application.Queries.Accounts;
 using Wallace.Domain.Entities;
 
 namespace Wallace.Tests.Application.Accounts.GetAccounts
@@ -44,16 +43,5 @@ namespace Wallace.Tests.Application.Accounts.GetAccounts
 
             AssertEqual(accounts, retrievedAccounts.Select(ad => Mapper.Map<Account>(ad)))
 ;        }
-
-        [Test]
-        public async Task Handle_ShouldReturnEmptyListIfNoAccountsExist()
-        {
-            var retrievedAccounts = await _handler.Handle(
-                new GetAccountsQuery(),
-                CancellationToken.None
-            );
-            
-            Assert.IsEmpty(retrievedAccounts);
-        }
     }
 }

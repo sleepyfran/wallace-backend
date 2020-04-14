@@ -12,7 +12,8 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
 {
     public class CreateAccountCommand : AccountDto, IRequest<Guid> { }
 
-    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Guid>
+    public class CreateAccountCommandHandler
+        : IRequestHandler<CreateAccountCommand, Guid>
     {
         private readonly IDbContext _dbContext;
         private readonly IIdentityAccessor _identityAccessor;

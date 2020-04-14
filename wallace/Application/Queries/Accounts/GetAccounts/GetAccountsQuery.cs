@@ -9,8 +9,9 @@ using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Application.Common.Dto;
 using Wallace.Domain.Identity.Interfaces;
+using static Wallace.Domain.Queries.UserAccounts;
 
-namespace Wallace.Application.Queries.Accounts.GetAccounts
+namespace Wallace.Application.Queries.Accounts
 {
     public class GetAccountsQuery : IRequest<IEnumerable<AccountDto>> { }
 
@@ -40,10 +41,10 @@ namespace Wallace.Application.Queries.Accounts.GetAccounts
             CancellationToken cancellationToken
         )
         {
-            var userId = _identityAccessor.Get().Id;
+            var loggedInUser = _identityAccessor.Get().Id;
 
             return await _dbContext.Accounts
-                .Where(a => a.OwnerId == userId)
+                .QueryAccountsFor(loggedInUser)
                 .ProjectTo<AccountDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

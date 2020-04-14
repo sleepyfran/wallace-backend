@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wallace.Application.Commands.Accounts.CreateAccount;
-using Wallace.Application.Queries.Accounts.GetAccount;
-using Wallace.Application.Queries.Accounts.GetAccounts;
+using Wallace.Application.Commands.Accounts.EditAccount;
+using Wallace.Application.Queries.Accounts;
 
 namespace Wallace.Api.Controllers
 {
@@ -45,6 +45,7 @@ namespace Wallace.Api.Controllers
         /// </summary>
         /// <response code="200">Successfully fetched, returns the data of the account</response>
         /// <response code="400">The request was malformed or the data had an error</response>
+        /// <response code="404">The account does not exist or does not belong to the user</response>
         [Route("{id}")]
         [HttpGet]
         public async Task<ActionResult> GetAccount(Guid id)
@@ -53,6 +54,23 @@ namespace Wallace.Api.Controllers
             {
                 Id = id
             }));
-        } 
+        }
+
+        /// <summary>
+        /// Updates an account given its GUID.
+        /// </summary>
+        /// <response code="200">Successfully updated, returns the ID of the account</response>
+        /// <response code="400">The request was malformed or the data had an error</response>
+        /// <response code="404">The account does not exist or does not belong to the user</response>
+        [Route("{id}")]
+        [HttpPut]
+        public async Task<ActionResult> ModifyAccount(
+            [FromRoute] Guid id,
+            [FromBody] EditAccountCommand input
+        )
+        {
+            input.QueryId = id;
+            return Ok(await Mediator.Send(input));
+        }
     }
 }

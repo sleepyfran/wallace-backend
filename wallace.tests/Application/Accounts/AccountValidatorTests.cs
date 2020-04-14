@@ -1,17 +1,20 @@
 using FluentValidation.TestHelper;
 using NUnit.Framework;
-using Wallace.Application.Commands.Accounts.CreateAccount;
+using Wallace.Application.Commands.Accounts;
+using Wallace.Application.Commands.Accounts.EditAccount;
 
 namespace Wallace.Tests.Application.Accounts.CreateAccount
 {
-    public class CreateAccountValidatorTests
+    public class AccountValidatorTests
     {
-        private CreateAccountValidator _validator;
+        private AccountValidator _validator;
+        private EditAccountValidator _includedValidator;
 
         [SetUp]
         public void SetUp()
         {
-            _validator = new CreateAccountValidator();
+            _validator = new AccountValidator();
+            _includedValidator = new EditAccountValidator();
         }
         
         #region Name
@@ -20,12 +23,18 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
         public void ShouldFailWithEmptyName()
         {
             _validator.ShouldHaveValidationErrorForEmpty(c => c.Name);
+            _includedValidator.ShouldHaveValidationErrorForEmpty(c => c.Name);
         }
 
         [Test]
         public void ShouldFailWithNamesMoreThan200Characters()
         {
             _validator.ShouldHaveValidationErrorForMoreThanCharacters(
+                c => c.Name,
+                200
+            );
+            
+            _includedValidator.ShouldHaveValidationErrorForMoreThanCharacters(
                 c => c.Name,
                 200
             );
@@ -39,6 +48,7 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
         public void ShouldFailWithEmptyCurrency()
         {
             _validator.ShouldHaveValidationErrorForEmpty(c => c.Currency);
+            _includedValidator.ShouldHaveValidationErrorForEmpty(c => c.Currency);
         }
 
         [Test]
@@ -51,6 +61,11 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
                 c => c.Currency,
                 input
             );
+            
+            _includedValidator.ShouldHaveValidationErrorFor(
+                c => c.Currency,
+                input
+            );
         }
         
         [Test]
@@ -60,6 +75,11 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
         )
         {
             _validator.ShouldNotHaveValidationErrorFor(
+                c => c.Currency,
+                input
+            );
+            
+            _includedValidator.ShouldNotHaveValidationErrorFor(
                 c => c.Currency,
                 input
             );
@@ -79,6 +99,11 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
                 c => c.Balance,
                 input
             );
+            
+            _includedValidator.ShouldHaveValidationErrorFor(
+                c => c.Balance,
+                input
+            );
         }
 
         [Test]
@@ -87,6 +112,11 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
         )
         {
             _validator.ShouldNotHaveValidationErrorFor(
+                c => c.Balance,
+                input
+            );
+            
+            _includedValidator.ShouldNotHaveValidationErrorFor(
                 c => c.Balance,
                 input
             );

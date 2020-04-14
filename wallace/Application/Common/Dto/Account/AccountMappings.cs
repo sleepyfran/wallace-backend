@@ -1,19 +1,12 @@
-using System;
 using AutoMapper;
 using NodaMoney;
 using Wallace.Application.Common.Mappings;
 using Wallace.Domain.Entities;
 
-namespace Wallace.Application.Queries.Accounts
+namespace Wallace.Application.Common.Dto
 {
-    public class AccountDto : IMapping<Account>
+    public class AccountMappings : IMapping<AccountDto, Account>
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public decimal Balance { get; set; }
-        public string Currency { get; set; }
-        public Guid Owner { get; set; }
-        
         public void Mapping(Profile profile)
         {
             profile

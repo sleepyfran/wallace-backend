@@ -2,7 +2,7 @@ using System;
 using AutoMapper;
 using NUnit.Framework;
 using Wallace.Application.Common.Mappings;
-using Wallace.Application.Queries.Accounts;
+using Wallace.Application.Common.Dto;
 using Wallace.Domain.Entities;
 
 namespace Wallace.Tests.Application.Mappings

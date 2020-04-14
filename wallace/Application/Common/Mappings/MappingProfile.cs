@@ -20,7 +20,10 @@ namespace Wallace.Application.Common.Mappings
         {
             var types = assembly.GetExportedTypes()
                 .Where(t => t.GetInterfaces().Any(i => 
-                    i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapping<>)))
+                        i.IsGenericType &&
+                        i.GetGenericTypeDefinition() == typeof(IMapping<,>)
+                    )
+                )
                 .ToList();
 
             foreach (var type in types)
@@ -29,7 +32,7 @@ namespace Wallace.Application.Common.Mappings
 
                 var methodInfo = 
                     type.GetMethod("Mapping") ?? 
-                    type.GetInterface("IMapFrom`1").GetMethod("Mapping");
+                    type.GetInterface("IMapping`2").GetMethod("Mapping");
                 
                 methodInfo?.Invoke(instance, new object[] { this });
             }

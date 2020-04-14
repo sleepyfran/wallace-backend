@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Interfaces;
+using Wallace.Application.Common.Dto;
 using Wallace.Domain.Exceptions;
 using Wallace.Domain.Identity.Interfaces;
 

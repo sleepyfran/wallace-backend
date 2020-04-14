@@ -4,29 +4,13 @@ using System.Threading.Tasks;
 using MediatR;
 using NodaMoney;
 using Wallace.Application.Common.Interfaces;
+using Wallace.Application.Common.Dto;
 using Wallace.Domain.Entities;
-using Wallace.Domain.Exceptions;
 using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Accounts.CreateAccount
 {
-    public class CreateAccountCommand : IRequest<Guid>
-    {
-        /// <summary>
-        /// Name assigned to the account.
-        /// </summary>
-        public string Name { get; set; }
-        
-        /// <summary>
-        /// Current balance of the account,
-        /// </summary>
-        public decimal Balance { get; set; }
-        
-        /// <summary>
-        /// Currency code. Ex: EUR, CZK, USD, etc.
-        /// </summary>
-        public string Currency { get; set; }
-    }
+    public class CreateAccountCommand : AccountDto, IRequest<Guid> { }
 
     public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Guid>
     {

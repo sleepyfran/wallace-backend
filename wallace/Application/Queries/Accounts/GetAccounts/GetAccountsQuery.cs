@@ -7,6 +7,7 @@ using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Interfaces;
+using Wallace.Application.Common.Dto;
 using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Queries.Accounts.GetAccounts

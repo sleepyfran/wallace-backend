@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wallace.Application.Commands.Accounts.CreateAccount;
 using Wallace.Application.Commands.Accounts.EditAccount;
+using Wallace.Application.Commands.Accounts.RemoveAccount;
 using Wallace.Application.Queries.Accounts;
 
 namespace Wallace.Api.Controllers
@@ -71,6 +72,23 @@ namespace Wallace.Api.Controllers
         {
             input.QueryId = id;
             return Ok(await Mediator.Send(input));
+        }
+
+        /// <summary>
+        /// Removes an account given its GUID only if it belongs to the current
+        /// logged in user.
+        /// </summary>
+        /// <response code="200">Successfully removed, returns the ID of the account</response>
+        /// <response code="400">The request was malformed or the data had an error</response>
+        /// <response code="404">The account does not exist or does not belong to the user</response>
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<ActionResult> RemoveAccount(Guid id)
+        {
+            return Ok(await Mediator.Send(new RemoveAccountCommand
+            {
+                Id = id
+            }));
         }
     }
 }

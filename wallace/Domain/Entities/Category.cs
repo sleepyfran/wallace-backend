@@ -10,7 +10,7 @@ namespace Wallace.Domain.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string IconUrl { get; set; }
+        public string Emoji { get; set; }
         
         public List<Transaction> Transactions { get; set; }
             = new List<Transaction>();

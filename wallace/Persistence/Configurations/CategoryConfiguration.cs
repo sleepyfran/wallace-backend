@@ -13,7 +13,7 @@ namespace Wallace.Persistence.Configurations
                 .IsRequired();
 
             builder
-                .Property(c => c.IconUrl)
+                .Property(c => c.Emoji)
                 .IsRequired();
 
             builder

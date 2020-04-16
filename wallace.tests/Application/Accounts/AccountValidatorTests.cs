@@ -3,7 +3,7 @@ using NUnit.Framework;
 using Wallace.Application.Commands.Accounts;
 using Wallace.Application.Commands.Accounts.EditAccount;
 
-namespace Wallace.Tests.Application.Accounts.CreateAccount
+namespace Wallace.Tests.Application.Accounts
 {
     public class AccountValidatorTests
     {

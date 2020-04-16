@@ -46,17 +46,29 @@ namespace Wallace.Application
 
             foreach (var validator in validatorTypes)
             {
-                var requestType = validator.GetInterfaces()
+                var requestType = validator
+                    .GetInterfaces()
                     .Where(i => i.IsGenericType &&
                                 i.GetGenericTypeDefinition() ==
                                 typeof(IValidator<>))
                     .Select(i => i.GetGenericArguments()[0])
                     .First();
 
-                var validatorInterface = validatorType
-                    .MakeGenericType(requestType);
+                // In the case of some commands they derive from a base class
+                // instead of repeating fields (example: Account commands), in
+                // those cases we need to retrieve all the assignable classes
+                // from the request type and register those validators as well.
+                var applicableTypes = assembly
+                    .GetExportedTypes()
+                    .Where(p => requestType.IsAssignableFrom(p));
 
-                services.AddTransient(validatorInterface, validator);
+                foreach (var type in applicableTypes)
+                {
+                    var validatorInterface = validatorType
+                        .MakeGenericType(type);
+
+                    services.AddTransient(validatorInterface, validator);
+                }
             }
 
             return services;

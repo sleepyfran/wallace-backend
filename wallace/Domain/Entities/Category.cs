@@ -12,6 +12,9 @@ namespace Wallace.Domain.Entities
         public string Name { get; set; }
         public string Emoji { get; set; }
         
+        public Guid OwnerId { get; set; }
+        public User Owner { get; set; }
+        
         public List<Transaction> Transactions { get; set; }
             = new List<Transaction>();
     }

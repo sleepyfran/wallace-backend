@@ -14,5 +14,6 @@ namespace Wallace.Domain.Entities
         public string Password { get; set; }
         
         public List<Account> Accounts { get; set; } = new List<Account>();
+        public List<Category> Categories { get; set; } = new List<Category>();
     }
 }

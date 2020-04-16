@@ -20,6 +20,11 @@ namespace Wallace.Persistence.Configurations
                 .HasMany(c => c.Transactions)
                 .WithOne(t => t.Category)
                 .HasForeignKey(t => t.CategoryId);
+            
+            builder
+                .HasOne(a => a.Owner)
+                .WithMany(u => u.Categories)
+                .HasForeignKey(a => a.OwnerId);
         }
     }
 }

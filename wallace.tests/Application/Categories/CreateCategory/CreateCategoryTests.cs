@@ -29,8 +29,8 @@ namespace Wallace.Tests.Application.Categories.CreateCategory
         {
             var validInput = new CreateCategoryCommand
             {
-                Name = "Test Category",
-                Emoji = "🔥"
+                Name = TestUserCategory.Name,
+                Emoji = TestUserCategory.Emoji
             };
             
             var categoryId = await _handler.Handle(

@@ -85,6 +85,30 @@ namespace Wallace.Tests
             Name = "Other User Account",
             OwnerId = OtherTestUser.Id
         };
+        
+        protected static readonly Category TestUserCategory = new Category
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test User Category",
+            Emoji = "🙂",
+            OwnerId = TestUser.Id
+        };
+            
+        protected static readonly Category AnotherTestUserCategory = new Category
+        {
+            Id = Guid.NewGuid(),
+            Name = "Another Test User Category",
+            Emoji = "🙃",
+            OwnerId = TestUser.Id
+        };
+            
+        protected static readonly Category OtherUserCategory = new Category
+        {
+            Id = Guid.NewGuid(),
+            Name = "Other User Category",
+            Emoji = "😀",
+            OwnerId = OtherTestUser.Id
+        };
 
         #endregion
         
@@ -203,6 +227,21 @@ namespace Wallace.Tests
         {
             await EnsureUsersAdded(accounts.Select(a => a.OwnerId));
             DbContext.Accounts.AddRange(accounts.Select(Clone));
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+        }
+        
+        /// <summary>
+        /// Adds the given categories to the test database data. If the users
+        /// linked to the accounts are not present, it'll try to add them
+        /// with the matching test user, if none it's found then it'll throw
+        /// an exception since a category cannot exist without an user.
+        /// </summary>
+        /// <param name="categories"></param>
+        /// <returns></returns>
+        protected async Task SeedCategoryData(params Category[] categories)
+        {
+            await EnsureUsersAdded(categories.Select(a => a.OwnerId));
+            DbContext.Categories.AddRange(categories.Select(Clone));
             await DbContext.SaveChangesAsync(CancellationToken.None);
         }
         

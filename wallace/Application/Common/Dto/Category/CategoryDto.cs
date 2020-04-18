@@ -7,5 +7,6 @@ namespace Wallace.Application.Common.Dto
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Emoji { get; set; }
+        public Guid Owner { get; set; }
     }
 }

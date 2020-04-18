@@ -23,7 +23,8 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
             
             _handler = new CreateAccountCommandHandler(
                 DbContext,
-                IdentityContainer
+                IdentityContainer,
+                Mapper
             );
 
             SeedUserData(TestUser).Wait();
@@ -43,7 +44,7 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
             Assert.IsNotNull(account);
             Assert.AreEqual("Test", account.Name);
             Assert.AreEqual(Money.Euro(1000), account.Balance);
-            Assert.AreEqual(TestUser.Id, account.Owner.Id);
+            Assert.AreEqual(TestUser.Id, account.OwnerId);
         }
     }
 }

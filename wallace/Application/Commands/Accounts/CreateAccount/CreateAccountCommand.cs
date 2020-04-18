@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
 using NodaMoney;
 using Wallace.Application.Common.Interfaces;
@@ -17,14 +18,17 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
     {
         private readonly IDbContext _dbContext;
         private readonly IIdentityAccessor _identityAccessor;
+        private readonly IMapper _mapper;
 
         public CreateAccountCommandHandler(
             IDbContext dbContext,
-            IIdentityAccessor identityAccessor
+            IIdentityAccessor identityAccessor,
+            IMapper mapper
         )
         {
             _dbContext = dbContext;
             _identityAccessor = identityAccessor;
+            _mapper = mapper;
         }
     
         public async Task<Guid> Handle(
@@ -34,12 +38,10 @@ namespace Wallace.Application.Commands.Accounts.CreateAccount
         {
             var user = await _dbContext.Users
                 .FindAsync(_identityAccessor.Get().Id);
-            var account = new Account
+            var account = _mapper.Map(request, new Account
             {
-                Name = request.Name,
-                Balance = new Money(request.Balance, request.Currency),
                 OwnerId = user.Id
-            };
+            });
 
             _dbContext.Accounts.Add(account);
             await _dbContext.SaveChangesAsync(cancellationToken);

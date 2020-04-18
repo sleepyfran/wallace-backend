@@ -1,3 +1,4 @@
+using System;
 using AutoMapper;
 using NodaMoney;
 using Wallace.Application.Common.Mappings;
@@ -15,17 +16,15 @@ namespace Wallace.Application.Common.Dto
                     a => a.Balance,
                     opt => opt.MapFrom(ad => new Money(ad.Balance, ad.Currency))
                 )
+                .ForMember(a => a.Owner, opts => opts.Ignore())
+                .ForMember(a => a.Transactions, opts => opts.Ignore())
                 .ForMember(
                     a => a.OwnerId,
-                    opt => opt.MapFrom(ad => ad.Owner)
-                )
-                .ForMember(
-                    a => a.Owner,
-                    opt => opt.Ignore()
-                )
-                .ForMember(
-                    a => a.Transactions,
-                    opt => opt.Ignore()
+                    opts =>
+                    {
+                        opts.Condition(ad => ad.Owner != Guid.Empty);
+                        opts.MapFrom(ad => ad.Owner);
+                    }
                 );
 
             profile

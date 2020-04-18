@@ -21,7 +21,7 @@ namespace Wallace.Tests.Domain.QueryableExtensions
         [Test]
         public void QueryAccountsFor_ShouldReturnAccountIfExists()
         {
-            AssertEqual(
+            AssertAreEqual(
                 TestUserAccount,
                 DbContext.Accounts
                     .QueryEntityFor(
@@ -75,7 +75,7 @@ namespace Wallace.Tests.Domain.QueryableExtensions
                 .QueryEntitiesFor(OtherTestUser.Id);
             
             Assert.AreEqual(1, accounts.Count());
-            AssertEqual(OtherUserAccount, accounts.First());
+            AssertAreEqual(OtherUserAccount, accounts.First());
         }
 
         #endregion

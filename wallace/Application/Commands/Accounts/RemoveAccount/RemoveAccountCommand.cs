@@ -1,14 +1,16 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using MediatR;
+using Wallace.Application.Common.Dto;
+using Wallace.Application.Common.Handlers;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Domain.Identity.Interfaces;
-using Wallace.Domain.Queries;
 
 namespace Wallace.Application.Commands.Accounts.RemoveAccount
 {
-    public class RemoveAccountCommand : IRequest<Guid>
+    public class RemoveAccountCommand : IRequest<Guid>, IDto
     {
         /// <summary>
         /// ID of the account to remove.
@@ -17,35 +19,21 @@ namespace Wallace.Application.Commands.Accounts.RemoveAccount
     }
 
     public class RemoveAccountCommandHandler
-        : IRequestHandler<RemoveAccountCommand, Guid>
+        : AuthorizedCommandHandler<RemoveAccountCommand, Guid>
     {
-        private readonly IDbContext _dbContext;
-        private readonly IIdentityAccessor _identityAccessor;
-
         public RemoveAccountCommandHandler(
             IDbContext dbContext,
-            IIdentityAccessor identityAccessor
-        )
-        {
-            _dbContext = dbContext;
-            _identityAccessor = identityAccessor;
-        }
+            IIdentityAccessor identityAccessor,
+            IMapper mapper
+        ) : base(dbContext, identityAccessor, mapper) { }
         
-        public async Task<Guid> Handle(
+        public override async Task<Guid> Handle(
             RemoveAccountCommand request,
             CancellationToken cancellationToken
-        )
-        {
-            var loggedInUserId = _identityAccessor.Get().Id;
-            var account = _dbContext.Accounts.QueryEntityFor(
-                loggedInUserId,
-                request.Id
-            );
-
-            _dbContext.Accounts.Remove(account);
-            await _dbContext.SaveChangesAsync(cancellationToken);
-            
-            return request.Id;
-;        }
+        ) => await RemoveForCurrentUser(
+            request,
+            cancellationToken,
+            DbContext.Accounts
+        );
     }
 }

@@ -21,7 +21,11 @@ namespace Wallace.Tests.Application.Accounts.GetAccount
         {
             base.SetUp();
             
-            _handler = new GetAccountQueryHandler(DbContext, IdentityContainer);
+            _handler = new GetAccountQueryHandler(
+                DbContext, 
+                IdentityContainer,
+                Mapper
+            );
             SetIdentityTo(TestUser);
             
             _input = new GetAccountQuery
@@ -40,7 +44,7 @@ namespace Wallace.Tests.Application.Accounts.GetAccount
                 CancellationToken.None
             );
             
-            AssertEqual(TestUserAccount, Mapper.Map<Account>(queryResult));
+            AssertAreEqual(TestUserAccount, Mapper.Map<Account>(queryResult));
         }
 
         [Test]

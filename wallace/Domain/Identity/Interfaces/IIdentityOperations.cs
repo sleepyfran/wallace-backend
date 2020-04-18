@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Wallace.Domain.Identity.Model;
 
 namespace Wallace.Domain.Identity.Interfaces
@@ -18,7 +20,25 @@ namespace Wallace.Domain.Identity.Interfaces
     /// </summary>
     public interface IIdentityAccessor
     {
+        /// <summary>
+        /// Retrieves the current identity from the container.
+        /// </summary>
         IIdentity Get();
+
+        /// <summary>
+        /// Executes a function with the current identity from the container.
+        /// </summary>
+        Task<T> WithCurrentIdentity<T>(
+            Func<IIdentity, Task<T>> wrappedFunc
+        );
+        
+        /// <summary>
+        /// Executes a function with the current ID of the identity from the
+        /// container.
+        /// </summary>
+        Task<T> WithCurrentIdentityId<T>(
+            Func<Guid, Task<T>> wrappedFunc
+        );
     }
 
     /// <summary>

@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using NodaMoney;
 using NUnit.Framework;
 using Wallace.Application.Commands.Accounts.CreateAccount;
 
@@ -41,10 +40,9 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount
 
             var account = DbContext.Accounts.Find(accountId);
             
-            Assert.IsNotNull(account);
-            Assert.AreEqual("Test", account.Name);
-            Assert.AreEqual(Money.Euro(1000), account.Balance);
-            Assert.AreEqual(TestUser.Id, account.OwnerId);
+            AssertAreEqual(
+                Mapper.Map(_validInput, account), account
+            );
         }
     }
 }

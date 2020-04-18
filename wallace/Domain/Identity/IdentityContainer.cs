@@ -1,3 +1,5 @@
+using System;
+using System.Threading.Tasks;
 using Wallace.Domain.Identity.Model;
 
 namespace Wallace.Domain.Identity.Interfaces
@@ -15,5 +17,21 @@ namespace Wallace.Domain.Identity.Interfaces
         }
 
         public IIdentity Get() => _identity;
+        
+        public async Task<T> WithCurrentIdentity<T>(
+            Func<IIdentity, Task<T>> wrappedFunc
+        )
+        {
+            return await wrappedFunc(Get());
+        }
+        
+        public async Task<T> WithCurrentIdentityId<T>(
+            Func<Guid, Task<T>> wrappedFunc
+        )
+        {
+            return await WithCurrentIdentity(async identity => 
+                await wrappedFunc(identity.Id)
+            );
+        }
     }
 }

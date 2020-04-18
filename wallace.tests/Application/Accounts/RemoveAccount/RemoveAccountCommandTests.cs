@@ -15,7 +15,8 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount.RemoveAccount
         {
             _handler = new RemoveAccountCommandHandler(
                 DbContext, 
-                IdentityContainer
+                IdentityContainer,
+                Mapper
             );
 
             SeedAccountData(TestUserAccount).Wait();

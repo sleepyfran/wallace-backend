@@ -2,7 +2,7 @@ using System;
 
 namespace Wallace.Application.Common.Dto
 {
-    public class CategoryDto
+    public class CategoryDto : IDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

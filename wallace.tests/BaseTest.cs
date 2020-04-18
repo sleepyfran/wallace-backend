@@ -252,7 +252,7 @@ namespace Wallace.Tests
             await DbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        protected void AssertEqual(User expected, User actual)
+        protected void AssertAreEqual(User expected, User actual)
         {
             Assert.NotNull(expected);
             Assert.NotNull(actual);
@@ -264,19 +264,8 @@ namespace Wallace.Tests
             Assert.AreEqual(expected.Email, actual.Email);
             Assert.AreEqual(expected.Password, actual.Password);
         }
-        
-        protected void AssertEqual(IEnumerable<User> expected, IEnumerable<User> actual)
-        {
-            var expectedList = expected.ToList();
-            var actualList = actual.ToList();
-            
-            for (var i = 0; i < actualList.Count(); i++)
-            {
-                AssertEqual(expectedList[i], actualList[i]);
-            }
-        }
 
-        protected void AssertEqual(Account expected, Account actual)
+        protected void AssertAreEqual(Account expected, Account actual)
         {
             Assert.NotNull(expected);
             Assert.NotNull(actual);
@@ -289,14 +278,31 @@ namespace Wallace.Tests
             Assert.AreEqual(expected.OwnerId, actual.OwnerId);
         }
 
-        protected void AssertEqual(IEnumerable<Account> expected, IEnumerable<Account> actual)
+        protected void AssertAreEqual(Category expected, Category actual)
+        {
+            Assert.NotNull(expected);
+            Assert.NotNull(actual);
+            
+            if (expected.Id != Guid.Empty && actual.Id != Guid.Empty)
+                Assert.AreEqual(expected.Id, actual.Id);
+            
+            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.Emoji, actual.Emoji);
+            Assert.AreEqual(expected.OwnerId, actual.OwnerId);
+        }
+
+        protected void CompareLists<T>(
+            IEnumerable<T> expected,
+            IEnumerable<T> actual,
+            Action<T, T> compare
+        )
         {
             var expectedList = expected.ToList();
             var actualList = actual.ToList();
             
             for (var i = 0; i < actualList.Count(); i++)
             {
-                AssertEqual(expectedList[i], actualList[i]);
+                compare(expectedList[i], actualList[i]);
             }
         }
     }

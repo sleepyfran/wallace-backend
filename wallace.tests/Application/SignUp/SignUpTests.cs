@@ -39,7 +39,7 @@ namespace Wallace.Tests.Application.SignUp
 
             var user = DbContext.Users.First();
             
-            AssertEqual(new User
+            AssertAreEqual(new User
             {
                 Email = _validInput.Email,
                 Name = _validInput.Name,

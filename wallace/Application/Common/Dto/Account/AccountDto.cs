@@ -6,7 +6,7 @@ using Wallace.Domain.Entities;
 
 namespace Wallace.Application.Common.Dto
 {
-    public class AccountDto
+    public class AccountDto : IDto
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -40,10 +40,10 @@ namespace Wallace.Tests.Application.Categories.CreateCategory
 
             var category = DbContext.Categories.Find(categoryId);
             
-            Assert.IsNotNull(category);
-            Assert.AreEqual(validInput.Name, category.Name);
-            Assert.AreEqual(validInput.Emoji, category.Emoji);
-            Assert.AreEqual(TestUser.Id, category.OwnerId);
+            AssertAreEqual(
+                Mapper.Map(validInput, category),
+                category
+            );
         }
     }
 }

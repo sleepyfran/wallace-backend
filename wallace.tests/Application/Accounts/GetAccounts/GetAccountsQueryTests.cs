@@ -41,7 +41,11 @@ namespace Wallace.Tests.Application.Accounts.GetAccounts
                 CancellationToken.None
             )).ToList();
 
-            AssertEqual(accounts, retrievedAccounts.Select(ad => Mapper.Map<Account>(ad)))
-;        }
+            CompareLists(
+                accounts,
+                retrievedAccounts.Select(ad => Mapper.Map<Account>(ad)),
+                AssertAreEqual
+            );
+        }
     }
 }

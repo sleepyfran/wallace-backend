@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NodaMoney;
 using NUnit.Framework;
 using Wallace.Application.Commands.Accounts.EditAccount;
+using Wallace.Domain.Entities;
 using Wallace.Domain.Exceptions;
 
 namespace Wallace.Tests.Application.Accounts.EditAccount
@@ -46,13 +47,7 @@ namespace Wallace.Tests.Application.Accounts.EditAccount
 
             var account = DbContext.Accounts.Find(editedId);
             
-            Assert.IsNotNull(account);
-            Assert.AreEqual(_validInput.Name, account.Name);
-            Assert.AreEqual(
-                new Money(_validInput.Balance, _validInput.Currency),
-                account.Balance
-            );
-            Assert.AreEqual(TestUser.Id, account.Owner.Id);
+            AssertAreEqual(Mapper.Map<Account>(_validInput), account);
         }
 
         [Test]

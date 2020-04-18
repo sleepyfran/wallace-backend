@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wallace.Application.Commands.Categories.CreateCategory;
+using Wallace.Application.Commands.Categories.EditCategory;
 using Wallace.Application.Queries.Categories;
 
 namespace Wallace.Api.Controllers
@@ -53,6 +54,23 @@ namespace Wallace.Api.Controllers
         public async Task<ActionResult> GetCategory(Guid id)
         {
             return Ok(await Mediator.Send(new GetCategoryQuery { Id = id }));
+        }
+        
+        /// <summary>
+        /// Updates a category given its GUID.
+        /// </summary>
+        /// <response code="200">Successfully updated, returns the ID of the category</response>
+        /// <response code="400">The request was malformed or the data had an error</response>
+        /// <response code="404">The category does not exist or does not belong to the user</response>
+        [Route("{id}")]
+        [HttpPut]
+        public async Task<ActionResult> ModifyCategory(
+            [FromRoute] Guid id,
+            [FromBody] EditCategoryCommand input
+        )
+        {
+            input.QueryId = id;
+            return Ok(await Mediator.Send(input));
         }
     }
 }

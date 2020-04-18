@@ -14,12 +14,9 @@ namespace Wallace.Application.Common.Validators
         /// <returns></returns>
         public static IRuleBuilderOptions<T, string> MustBeValidCurrency<T>(
             this IRuleBuilder<T, string> ruleBuilder
-        )
-        {
-            return ruleBuilder
+        ) => ruleBuilder
                 .Must(BeValid)
                 .WithMessage("The given currency is not valid. Provide a valid currency code. Example: EUR, USD, CZK, etc.");
-        }
 
         private static bool BeValid(string currency)
         {

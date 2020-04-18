@@ -8,29 +8,28 @@ using Wallace.Application.Common.Handlers;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Domain.Identity.Interfaces;
 
-namespace Wallace.Application.Commands.Accounts.EditAccount
+namespace Wallace.Application.Commands.Categories.EditCategory
 {
-    public class EditAccountCommand : AccountDto, IRequest<Guid>, IEditDto
+    public class EditCategoryCommand : CategoryDto, IRequest<Guid>, IEditDto
     {
         public Guid QueryId { get; set; }
     }
 
-    public class EditAccountCommandHandler
-        : AuthorizedCommandHandler<EditAccountCommand, Guid>
+    public class EditCategoryCommandHandler
+        : AuthorizedCommandHandler<EditCategoryCommand, Guid>
     {
-        public EditAccountCommandHandler(
+        public EditCategoryCommandHandler(
             IDbContext dbContext,
-            IIdentityAccessor identityAccessor,
-            IMapper mapper
-        ) : base(dbContext, identityAccessor, mapper) { }
+            IIdentityAccessor accessor,
+            IMapper mapper) : base(dbContext, accessor, mapper) { }
 
         public override async Task<Guid> Handle(
-            EditAccountCommand request,
+            EditCategoryCommand request,
             CancellationToken cancellationToken
         ) => await EditForCurrentUser(
             request,
             cancellationToken,
-            DbContext.Accounts
+            DbContext.Categories
         );
     }
 }

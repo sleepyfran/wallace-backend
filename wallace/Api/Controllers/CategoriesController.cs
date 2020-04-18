@@ -30,6 +30,17 @@ namespace Wallace.Api.Controllers
 
             return Created(location, categoryId);
         }
+        
+        /// <summary>
+        /// Retrieves all the categories of the current logged in user.
+        /// </summary>
+        /// <returns></returns>
+        [Route("")]
+        [HttpGet]
+        public async Task<ActionResult> GetCategories()
+        {
+            return Ok(await Mediator.Send(new GetCategoriesQuery()));
+        }
 
         /// <summary>
         /// Retrieves the data of the category with the specified GUID.

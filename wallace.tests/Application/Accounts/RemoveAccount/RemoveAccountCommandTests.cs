@@ -50,7 +50,7 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount.RemoveAccount
                 Id = OtherUserAccount.Id
             };
             
-            Assert.ThrowsAsync<AccountNotFoundException>(async () => 
+            Assert.ThrowsAsync<EntityNotFoundException>(async () => 
                 await _handler.Handle(wrongAccountInput, CancellationToken.None)
             );
         }

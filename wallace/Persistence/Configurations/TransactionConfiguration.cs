@@ -27,6 +27,11 @@ namespace Wallace.Persistence.Configurations
                 .IsRequired();
 
             builder
+                .HasOne(a => a.Owner)
+                .WithMany(u => u.Transactions)
+                .HasForeignKey(a => a.OwnerId);
+            
+            builder
                 .HasOne(t => t.Account)
                 .WithMany(a => a.Transactions)
                 .HasForeignKey(t => t.AccountId);

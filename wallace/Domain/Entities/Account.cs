@@ -7,7 +7,7 @@ namespace Wallace.Domain.Entities
     /// <summary>
     /// Represents a bank account inside the app.
     /// </summary>
-    public class Account
+    public class Account : IOwnedEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

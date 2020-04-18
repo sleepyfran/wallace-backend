@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Application.Common.Dto;
 using Wallace.Domain.Identity.Interfaces;
-using static Wallace.Domain.Queries.UserAccounts;
+using Wallace.Domain.Queries;
 
 namespace Wallace.Application.Queries.Accounts
 {
@@ -44,7 +43,7 @@ namespace Wallace.Application.Queries.Accounts
             var loggedInUser = _identityAccessor.Get().Id;
 
             return await _dbContext.Accounts
-                .QueryAccountsFor(loggedInUser)
+                .QueryEntitiesFor(loggedInUser)
                 .ProjectTo<AccountDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
         }

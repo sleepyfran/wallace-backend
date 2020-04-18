@@ -41,7 +41,7 @@ namespace Wallace.Application.Commands.Accounts.EditAccount
         {
             var loggedInUser = _identityAccessor.Get().Id;
             var existingAccount = _dbContext.Accounts
-                .QueryAccountFor(loggedInUser, request.Id);
+                .QueryEntityFor(loggedInUser, request.Id);
             
             _dbContext.Accounts.Update(
                 _mapper.Map(request, existingAccount)

@@ -68,7 +68,7 @@ namespace Wallace.Tests.Application.Accounts.EditAccount
                 Owner = TestUser.Id
             };
             
-            Assert.ThrowsAsync<AccountNotFoundException>(async () => 
+            Assert.ThrowsAsync<EntityNotFoundException>(async () => 
                 await _handler.Handle(wrongAccountInput, CancellationToken.None)
             );
         }

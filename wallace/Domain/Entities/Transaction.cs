@@ -7,7 +7,7 @@ namespace Wallace.Domain.Entities
     /// <summary>
     /// Represents a transaction of a certain account.
     /// </summary>
-    public class Transaction
+    public class Transaction : IOwnedEntity
     {
         public Guid Id { get; set; }
         public TransactionType Type { get; set; }
@@ -16,6 +16,9 @@ namespace Wallace.Domain.Entities
         public DateTime Date { get; set; }
         public string Notes { get; set; }
 
+        public Guid OwnerId { get; set; }
+        public User Owner { get; set; }
+        
         public Guid AccountId { get; set; }
         public Account Account { get; set; }
         

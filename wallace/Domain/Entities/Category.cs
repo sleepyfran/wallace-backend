@@ -6,7 +6,7 @@ namespace Wallace.Domain.Entities
     /// <summary>
     /// Represents a category to which a transaction belong.
     /// </summary>
-    public class Category
+    public class Category : IOwnedEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

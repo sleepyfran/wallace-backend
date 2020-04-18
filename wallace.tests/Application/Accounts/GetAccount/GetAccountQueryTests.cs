@@ -48,7 +48,7 @@ namespace Wallace.Tests.Application.Accounts.GetAccount
         {
             await SeedAccountData(OtherUserAccount);
 
-            Assert.ThrowsAsync<AccountNotFoundException>(async () => 
+            Assert.ThrowsAsync<EntityNotFoundException>(async () => 
                 await _handler.Handle(_input, CancellationToken.None)
             );
         }
@@ -56,7 +56,7 @@ namespace Wallace.Tests.Application.Accounts.GetAccount
         [Test]
         public void Handle_ShouldThrowErrorIfGuidDoesNotExists()
         {
-            Assert.ThrowsAsync<AccountNotFoundException>(async () => 
+            Assert.ThrowsAsync<EntityNotFoundException>(async () => 
                 await _handler.Handle(_input, CancellationToken.None)
             );
         }

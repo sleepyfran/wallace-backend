@@ -5,7 +5,7 @@ using MediatR;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Application.Common.Dto;
 using Wallace.Domain.Identity.Interfaces;
-using static Wallace.Domain.Queries.UserAccounts;
+using Wallace.Domain.Queries;
 
 namespace Wallace.Application.Queries.Accounts
 {
@@ -39,7 +39,7 @@ namespace Wallace.Application.Queries.Accounts
         {
             var loggedInUserId = _identityAccessor.Get().Id;
             var account = _dbContext.Accounts
-                .QueryAccountFor(loggedInUserId, request.Id);
+                .QueryEntityFor(loggedInUserId, request.Id);
             
             return Task.FromResult(new AccountDto
             {

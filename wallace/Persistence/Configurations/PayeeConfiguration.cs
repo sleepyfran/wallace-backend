@@ -16,6 +16,11 @@ namespace Wallace.Persistence.Configurations
                 .HasMany(p => p.Transactions)
                 .WithOne(t => t.Payee)
                 .HasForeignKey(t => t.PayeeId);
+            
+            builder
+                .HasOne(a => a.Owner)
+                .WithMany(u => u.Payees)
+                .HasForeignKey(a => a.OwnerId);
         }
     }
 }

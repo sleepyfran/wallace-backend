@@ -6,7 +6,7 @@ using Wallace.Domain.Queries;
 
 namespace Wallace.Tests.Domain.QueryableExtensions
 {
-    public class Account : BaseTest
+    public class OwnedEntity : BaseTest
     {
         [SetUp]
         public new void SetUp()
@@ -24,7 +24,7 @@ namespace Wallace.Tests.Domain.QueryableExtensions
             AssertEqual(
                 TestUserAccount,
                 DbContext.Accounts
-                    .QueryAccountFor(
+                    .QueryEntityFor(
                         TestUser.Id,
                         TestUserAccount.Id
                     )
@@ -34,8 +34,8 @@ namespace Wallace.Tests.Domain.QueryableExtensions
         [Test]
         public void QueryAccountsFor_ShouldThrowErrorIfAccountDoesNotExist()
         {
-            Assert.Throws<AccountNotFoundException>(() => 
-                DbContext.Accounts.QueryAccountFor(
+            Assert.Throws<EntityNotFoundException>(() => 
+                DbContext.Accounts.QueryEntityFor(
                     TestUser.Id, 
                     Guid.NewGuid()
                 )
@@ -45,8 +45,8 @@ namespace Wallace.Tests.Domain.QueryableExtensions
         [Test]
         public void QueryAccountsFor_ShouldThrowErrorIfAccountDoesNotBelongToUser()
         {
-            Assert.Throws<AccountNotFoundException>(() => 
-                DbContext.Accounts.QueryAccountFor(
+            Assert.Throws<EntityNotFoundException>(() => 
+                DbContext.Accounts.QueryEntityFor(
                     TestUser.Id, 
                     OtherUserAccount.Id
                 )
@@ -61,7 +61,7 @@ namespace Wallace.Tests.Domain.QueryableExtensions
         public void QueryAccountsFor_ShouldReturnEmptyListIfNoAccountsExist()
         {
             var accounts = DbContext.Accounts
-                .QueryAccountsFor(OtherTestUser.Id);
+                .QueryEntitiesFor(OtherTestUser.Id);
             
             Assert.IsEmpty(accounts);
         }
@@ -72,7 +72,7 @@ namespace Wallace.Tests.Domain.QueryableExtensions
             SeedAccountData(OtherUserAccount).Wait();
 
             var accounts = DbContext.Accounts
-                .QueryAccountsFor(OtherTestUser.Id);
+                .QueryEntitiesFor(OtherTestUser.Id);
             
             Assert.AreEqual(1, accounts.Count());
             AssertEqual(OtherUserAccount, accounts.First());

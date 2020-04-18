@@ -37,7 +37,7 @@ namespace Wallace.Application.Commands.Accounts.RemoveAccount
         )
         {
             var loggedInUserId = _identityAccessor.Get().Id;
-            var account = _dbContext.Accounts.QueryAccountFor(
+            var account = _dbContext.Accounts.QueryEntityFor(
                 loggedInUserId,
                 request.Id
             );

@@ -29,11 +29,11 @@ namespace Wallace.Tests.Application.Categories.GetCategories
         [Test]
         public async Task Handle_ShouldReturnAllCategoriesByLoggedInUser()
         {
-            await SeedCategoryData(TestUserCategory, OtherUserCategory);
+            await SeedCategoryData(TestUserCategory, OtherTestUserCategory);
             var categories = new List<Category>
             {
                 TestUserCategory,
-                OtherUserCategory
+                OtherTestUserCategory
             };
             
             var retrievedCategories = (await _handler.Handle(

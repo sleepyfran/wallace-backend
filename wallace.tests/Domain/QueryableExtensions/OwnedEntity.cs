@@ -48,7 +48,7 @@ namespace Wallace.Tests.Domain.QueryableExtensions
             Assert.Throws<EntityNotFoundException>(() => 
                 DbContext.Accounts.QueryEntityFor(
                     TestUser.Id, 
-                    OtherUserAccount.Id
+                    OtherTestUserAccount.Id
                 )
             );
         }
@@ -69,13 +69,13 @@ namespace Wallace.Tests.Domain.QueryableExtensions
         [Test]
         public void QueryAccountsFor_ShouldReturnOnlyAccountsOfGivenUser()
         {
-            SeedAccountData(OtherUserAccount).Wait();
+            SeedAccountData(OtherTestUserAccount).Wait();
 
             var accounts = DbContext.Accounts
                 .QueryEntitiesFor(OtherTestUser.Id);
             
             Assert.AreEqual(1, accounts.Count());
-            AssertAreEqual(OtherUserAccount, accounts.First());
+            AssertAreEqual(OtherTestUserAccount, accounts.First());
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount.RemoveAccount
             );
 
             SeedAccountData(TestUserAccount).Wait();
-            SeedAccountData(OtherUserAccount).Wait();
+            SeedAccountData(OtherTestUserAccount).Wait();
             SetIdentityTo(TestUser);
         }
 
@@ -48,7 +48,7 @@ namespace Wallace.Tests.Application.Accounts.CreateAccount.RemoveAccount
         {
             var wrongAccountInput = new RemoveAccountCommand
             {
-                Id = OtherUserAccount.Id
+                Id = OtherTestUserAccount.Id
             };
             
             Assert.ThrowsAsync<EntityNotFoundException>(async () => 

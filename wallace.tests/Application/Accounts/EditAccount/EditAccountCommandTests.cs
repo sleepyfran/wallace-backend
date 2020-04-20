@@ -55,8 +55,8 @@ namespace Wallace.Tests.Application.Accounts.EditAccount
         {
             var wrongAccountInput = new EditAccountCommand
             {
-                Id = OtherUserAccount.Id,
-                QueryId = OtherUserAccount.Id,
+                Id = OtherTestUserAccount.Id,
+                QueryId = OtherTestUserAccount.Id,
                 Balance = 10,
                 Currency = "USD",
                 Name = "Non Matching IDs",

@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 using Wallace.Api.Filters;
 using Wallace.Api.Middleware;
 using Wallace.Application;
@@ -52,6 +53,12 @@ namespace Wallace
             services.AddControllersWithViews(
                 options => options.Filters.Add(new ExceptionFilter())
             );
+            
+            services.AddMvc()
+                .AddJsonOptions(options => {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    options.JsonSerializerOptions.IgnoreNullValues = true;
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

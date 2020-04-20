@@ -22,10 +22,10 @@ namespace Wallace.Domain.Entities
         public Guid AccountId { get; set; }
         public Account Account { get; set; }
         
-        public Guid CategoryId { get; set; }
+        public Guid? CategoryId { get; set; }
         public Category Category { get; set; }
         
-        public Guid PayeeId { get; set; }
+        public Guid? PayeeId { get; set; }
         public Payee Payee { get; set; }
     }
 }

@@ -53,9 +53,9 @@ namespace Wallace.Tests.Application.Categories.EditCategories
         {
             var wrongCategoryInput = new EditCategoryCommand
             {
-                Id = OtherUserCategory.Id,
-                QueryId = OtherUserCategory.Id,
-                Emoji = OtherUserCategory.Emoji,
+                Id = OtherTestUserCategory.Id,
+                QueryId = OtherTestUserCategory.Id,
+                Emoji = OtherTestUserCategory.Emoji,
                 Name = "Non Matching IDs",
                 Owner = OtherTestUser.Id
             };

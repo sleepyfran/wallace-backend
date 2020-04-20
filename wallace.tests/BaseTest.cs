@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,6 +14,7 @@ using Wallace.Application.Common.Interfaces;
 using Wallace.Application.Common.Mappings;
 using Wallace.Domain.Common.Interfaces;
 using Wallace.Domain.Entities;
+using Wallace.Domain.Enums;
 using Wallace.Domain.Identity.Entities;
 using Wallace.Domain.Identity.Interfaces;
 using Wallace.Domain.Identity.Model;
@@ -36,8 +34,8 @@ namespace Wallace.Tests
         protected ITokenChecker TokenChecker;
         protected ITokenData TokenData;
         
+        protected static DateTime DateTimeResult = System.DateTime.Now;
         protected bool ReloadOnSetUp = true;
-        protected DateTime DateTimeResult = System.DateTime.Now;
         protected bool PasswordHasherVerifyResult = true;
         protected string PasswordHasherResult = "hashed";
         protected Minutes TokenLifetime = 10;
@@ -78,7 +76,7 @@ namespace Wallace.Tests
             OwnerId = TestUser.Id
         };
             
-        protected static readonly Account OtherUserAccount = new Account
+        protected static readonly Account OtherTestUserAccount = new Account
         {
             Id = Guid.NewGuid(),
             Balance = Money.Euro(100),
@@ -102,11 +100,76 @@ namespace Wallace.Tests
             OwnerId = TestUser.Id
         };
             
-        protected static readonly Category OtherUserCategory = new Category
+        protected static readonly Category OtherTestUserCategory = new Category
         {
             Id = Guid.NewGuid(),
             Name = "Other User Category",
             Emoji = "😀",
+            OwnerId = OtherTestUser.Id
+        };
+
+        protected static readonly Payee TestUserPayee = new Payee
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test Payee",
+            OwnerId = TestUser.Id
+        };
+        
+        protected static readonly Payee AnotherTestUserPayee = new Payee
+        {
+            Id = Guid.NewGuid(),
+            Name = "Another Test Payee",
+            OwnerId = TestUser.Id
+        };
+        
+        protected static readonly Payee OtherTestUserPayee = new Payee
+        {
+            Id = Guid.NewGuid(),
+            Name = "Test Payee",
+            OwnerId = OtherTestUser.Id
+        };
+
+        protected static readonly Transaction TestUserTransaction = new Transaction
+        {
+            Id = Guid.NewGuid(),
+            Type = TransactionType.Income,
+            Repetition = Repetition.Never,
+            Amount = Money.Euro(1000),
+            Date = DateTimeResult,
+            Notes = "Just a test",
+            PayeeId = TestUserPayee.Id,
+            Payee = TestUserPayee,
+            CategoryId = TestUserCategory.Id,
+            Category = TestUserCategory,
+            AccountId = TestUserAccount.Id,
+            Account = TestUserAccount,
+            OwnerId = TestUser.Id
+        };
+        
+        protected static readonly Transaction AnotherTestUserTransaction = new Transaction
+        {
+            Type = TransactionType.Expense,
+            Repetition = Repetition.Weekly,
+            Amount = Money.Euro(250),
+            Date = DateTimeResult,
+            Notes = "Just a test",
+            PayeeId = AnotherTestUserPayee.Id,
+            CategoryId = AnotherTestUserCategory.Id,
+            AccountId = TestUserAccount.Id,
+            OwnerId = TestUser.Id
+        };
+        
+        protected static readonly Transaction OtherTestUserTransaction = new Transaction
+        {
+            Id = Guid.NewGuid(),
+            Type = TransactionType.Expense,
+            Repetition = Repetition.Monthly,
+            Amount = Money.Euro(120),
+            Date = DateTimeResult,
+            Notes = "Just a test",
+            PayeeId = OtherTestUserPayee.Id,
+            CategoryId = OtherTestUserCategory.Id,
+            AccountId = OtherTestUserAccount.Id,
             OwnerId = OtherTestUser.Id
         };
 
@@ -246,6 +309,21 @@ namespace Wallace.Tests
         }
         
         /// <summary>
+        /// Adds the given categories to the test database data. If the users
+        /// linked to the accounts are not present, it'll try to add them
+        /// with the matching test user, if none it's found then it'll throw
+        /// an exception since a category cannot exist without an user.
+        /// </summary>
+        /// <param name="transactions"></param>
+        /// <returns></returns>
+        protected async Task SeedTransactionData(params Transaction[] transactions)
+        {
+            await EnsureUsersAdded(transactions.Select(a => a.OwnerId));
+            DbContext.Transactions.AddRange(transactions.Select(Clone));
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+        }
+        
+        /// <summary>
         /// Returns a cloned copy of the object. Useful when inserting test
         /// data into the database so the original reference will never be
         /// modified.
@@ -328,6 +406,25 @@ namespace Wallace.Tests
             Assert.AreEqual(expected.Name, actual.Name);
             Assert.AreEqual(expected.Emoji, actual.Emoji);
             Assert.AreEqual(expected.OwnerId, actual.OwnerId);
+        }
+        
+        protected void AssertAreEqual(Transaction expected, Transaction actual)
+        {
+            Assert.NotNull(expected);
+            Assert.NotNull(actual);
+            
+            if (expected.Id != Guid.Empty && actual.Id != Guid.Empty)
+                Assert.AreEqual(expected.Id, actual.Id);
+            
+            Assert.AreEqual(expected.Type, actual.Type);
+            Assert.AreEqual(expected.Repetition, actual.Repetition);
+            Assert.AreEqual(expected.Amount, actual.Amount);
+            Assert.AreEqual(expected.Date, actual.Date);
+            Assert.AreEqual(expected.Notes, actual.Notes);
+            Assert.AreEqual(expected.AccountId, actual.AccountId);
+            Assert.AreEqual(expected.OwnerId, actual.OwnerId);
+            Assert.AreEqual(expected.CategoryId, actual.CategoryId);
+            Assert.AreEqual(expected.PayeeId, actual.PayeeId);
         }
 
         protected void CompareLists<T>(

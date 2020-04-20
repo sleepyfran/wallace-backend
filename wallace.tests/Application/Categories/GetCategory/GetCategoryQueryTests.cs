@@ -47,7 +47,7 @@ namespace Wallace.Tests.Application.Categories.GetCategory
         [Test]
         public async Task Handle_ShouldNotReturnCategoriesFromOtherUsers()
         {
-            await SeedCategoryData(OtherUserCategory);
+            await SeedCategoryData(OtherTestUserCategory);
 
             Assert.ThrowsAsync<EntityNotFoundException>(async () => 
                 await _handler.Handle(_input, CancellationToken.None)

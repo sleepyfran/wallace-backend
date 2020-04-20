@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using NUnit.Framework;
+using Wallace.Application.Commands.Transactions.CreateTransaction;
 using Wallace.Application.Common.Mappings;
 using Wallace.Application.Common.Dto;
 using Wallace.Domain.Entities;
@@ -33,6 +34,10 @@ namespace Wallace.Tests.Application.Mappings
         [TestCase(typeof(AccountDto), typeof(Account))]
         [TestCase(typeof(Category), typeof(CategoryDto))]
         [TestCase(typeof(CategoryDto), typeof(Category))]
+        [TestCase(typeof(Transaction), typeof(TransactionDto))]
+        [TestCase(typeof(TransactionDto), typeof(Transaction))]
+        [TestCase(typeof(Transaction), typeof(CreateTransactionCommand))]
+        [TestCase(typeof(CreateTransactionCommand), typeof(Transaction))]
         public void ShouldSupportMappingFrom(Type from, Type to)
         {
             var instance = Activator.CreateInstance(from);

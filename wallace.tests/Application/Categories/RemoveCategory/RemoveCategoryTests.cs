@@ -20,7 +20,7 @@ namespace Wallace.Tests.Application.Categories.RemoveCategory
             );
 
             SeedCategoryData(TestUserCategory).Wait();
-            SeedCategoryData(OtherUserCategory).Wait();
+            SeedCategoryData(OtherTestUserCategory).Wait();
             SetIdentityTo(TestUser);
         }
 
@@ -48,7 +48,7 @@ namespace Wallace.Tests.Application.Categories.RemoveCategory
         {
             var wrongInput = new RemoveCategoryCommand
             {
-                Id = OtherUserCategory.Id
+                Id = OtherTestUserCategory.Id
             };
 
             Assert.ThrowsAsync<EntityNotFoundException>(async () =>

@@ -6,7 +6,7 @@ namespace Wallace.Domain.Entities
     /// <summary>
     /// Representation of the user's credentials and information used across the app.
     /// </summary>
-    public class User
+    public class User : IEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

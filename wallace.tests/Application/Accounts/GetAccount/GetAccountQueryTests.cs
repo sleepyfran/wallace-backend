@@ -50,7 +50,7 @@ namespace Wallace.Tests.Application.Accounts.GetAccount
         [Test]
         public async Task Handle_ShouldNotReturnAccountsFromOtherUsers()
         {
-            await SeedAccountData(OtherUserAccount);
+            await SeedAccountData(OtherTestUserAccount);
 
             Assert.ThrowsAsync<EntityNotFoundException>(async () => 
                 await _handler.Handle(_input, CancellationToken.None)

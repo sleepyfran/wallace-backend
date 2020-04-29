@@ -10,28 +10,27 @@ namespace Wallace.Domain.Identity.Interfaces
     public class IdentityContainer : IIdentitySetter, IIdentityAccessor
     {
         private IIdentity _identity;
-        
+
         public void Set(IIdentity identity)
         {
             _identity = identity;
         }
 
         public IIdentity Get() => _identity;
-        
+
         public async Task<T> WithCurrentIdentity<T>(
             Func<IIdentity, Task<T>> wrappedFunc
         )
         {
             return await wrappedFunc(Get());
         }
-        
+
         public async Task<T> WithCurrentIdentityId<T>(
             Func<Guid, Task<T>> wrappedFunc
-        )
-        {
-            return await WithCurrentIdentity(async identity => 
-                await wrappedFunc(identity.Id)
-            );
-        }
+        ) => await wrappedFunc(Get().Id);
+
+        public T WithCurrentIdentityId<T>(
+            Func<Guid, T> wrappedFunc
+        ) => wrappedFunc(Get().Id);
     }
 }

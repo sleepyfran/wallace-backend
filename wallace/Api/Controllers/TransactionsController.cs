@@ -39,11 +39,15 @@ namespace Wallace.Api.Controllers
         /// Retrieves all the transactions of the current logged in user.
         /// </summary>
         /// <returns></returns>
-        [Route("")]
+        [Route("{year}/{month}")]
         [HttpGet]
-        public async Task<ActionResult> GetTransactions()
+        public async Task<ActionResult> GetTransactions(int year, int month)
         {
-            return Ok(await Mediator.Send(new GetTransactionsQuery()));
+            return Ok(await Mediator.Send(new GetTransactionsQuery
+            {
+                Month = month,
+                Year = year
+            }));
         }
 
         /// <summary>

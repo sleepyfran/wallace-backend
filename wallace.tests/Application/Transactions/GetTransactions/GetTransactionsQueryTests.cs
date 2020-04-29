@@ -24,12 +24,12 @@ namespace Wallace.Tests.Application.Transactions.GetTransactions
             );
             
             SetIdentityTo(TestUser);
+            SeedTransactionData(TestUserTransaction, OtherTestUserTransaction).Wait();
         }
 
         [Test]
-        public async Task Handle_ShouldReturnAllTransactionsByLoggedInUser()
+        public async Task Handle_ShouldReturnAllTransactionsInTheSpecifiedMonthAndYearByLoggedInUser()
         {
-            await SeedTransactionData(TestUserTransaction, OtherTestUserTransaction);
             var transactions = new List<Transaction>
             {
                 TestUserTransaction,
@@ -37,7 +37,11 @@ namespace Wallace.Tests.Application.Transactions.GetTransactions
             };
             
             var retrievedTransactions = (await _handler.Handle(
-                new GetTransactionsQuery(),
+                new GetTransactionsQuery
+                {
+                    Month = TestUserTransaction.Date.Month,
+                    Year = TestUserTransaction.Date.Year
+                },
                 CancellationToken.None
             )).ToList();
 
@@ -46,6 +50,42 @@ namespace Wallace.Tests.Application.Transactions.GetTransactions
                 retrievedTransactions.Select(ad => Mapper.Map<Transaction>(ad)),
                 AssertAreEqual
             );
+        }
+        
+        [Test]
+        public async Task Handle_ShouldReturnEmptyListIfNoTransactionsExistInTheGivenMonthAndYear() {
+            var retrievedTransactions = (await _handler.Handle(
+                new GetTransactionsQuery
+                {
+                    Month = TestUserTransaction.Date.Month - 1,
+                    Year = TestUserTransaction.Date.Year
+                },
+                CancellationToken.None
+            )).ToList();
+
+            Assert.IsEmpty(retrievedTransactions);
+            
+            retrievedTransactions = (await _handler.Handle(
+                new GetTransactionsQuery
+                {
+                    Month = TestUserTransaction.Date.Month,
+                    Year = TestUserTransaction.Date.Year - 1
+                },
+                CancellationToken.None
+            )).ToList();
+
+            Assert.IsEmpty(retrievedTransactions);
+            
+            retrievedTransactions = (await _handler.Handle(
+                new GetTransactionsQuery
+                {
+                    Month = TestUserTransaction.Date.Month - 1,
+                    Year = TestUserTransaction.Date.Year - 1
+                },
+                CancellationToken.None
+            )).ToList();
+
+            Assert.IsEmpty(retrievedTransactions);
         }
     }
 }

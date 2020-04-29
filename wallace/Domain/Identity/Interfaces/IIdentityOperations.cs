@@ -39,6 +39,14 @@ namespace Wallace.Domain.Identity.Interfaces
         Task<T> WithCurrentIdentityId<T>(
             Func<Guid, Task<T>> wrappedFunc
         );
+        
+        /// <summary>
+        /// Executes a function with the current ID of the identity from the
+        /// container.
+        /// </summary>
+        T WithCurrentIdentityId<T>(
+            Func<Guid, T> wrappedFunc
+        );
     }
 
     /// <summary>

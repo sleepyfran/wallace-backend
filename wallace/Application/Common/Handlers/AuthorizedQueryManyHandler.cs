@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -17,8 +18,8 @@ namespace Wallace.Application.Common.Handlers
     /// resources from the database.
     /// </summary>
     public abstract class AuthorizedQueryManyHandler<TRequest, TResult>
-        : IRequestHandler<TRequest, TResult> 
-    where TRequest : IRequest<TResult>
+        : IRequestHandler<TRequest, TResult>
+        where TRequest : IRequest<TResult>
     {
         protected readonly IDbContext DbContext;
         private readonly IIdentityAccessor _accessor;
@@ -34,7 +35,7 @@ namespace Wallace.Application.Common.Handlers
             _accessor = accessor;
             _mapper = mapper;
         }
-        
+
         /// <summary>
         /// Queries multiple entities belonging to the current logged in user
         /// from the database.
@@ -54,21 +55,17 @@ namespace Wallace.Application.Common.Handlers
         /// Cancellation token given in the handler.
         /// </param>
         /// <returns>All the entities belonging to the user.</returns>
-        protected async Task<IEnumerable<TEntityDto>> QueryManyForCurrentUser
+        protected IQueryable<TEntityDto> QueryManyForCurrentUser
             <TEntity, TEntityDto>
             (
-                CancellationToken cancellationToken,
                 DbSet<TEntity> dbSet
-            ) where TEntity : class, IOwnedEntity, new()
-        {
-            return await _accessor.WithCurrentIdentityId(async userId => 
-                await dbSet
+            ) where TEntity : class, IOwnedEntity, new() =>
+            _accessor.WithCurrentIdentityId(userId =>
+                dbSet
                     .QueryEntitiesFor(userId)
                     .ProjectTo<TEntityDto>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken)
             );
-        }
-        
+
         public abstract Task<TResult> Handle(
             TRequest request,
             CancellationToken cancellationToken

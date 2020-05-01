@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wallace.Application.Commands.Transactions.CreateTransaction;
 using Wallace.Application.Commands.Transactions.EditTransaction;
+using Wallace.Application.Commands.Transactions.RemoveTransaction;
 using Wallace.Application.Queries.Transactions;
 
 namespace Wallace.Api.Controllers
@@ -79,6 +80,23 @@ namespace Wallace.Api.Controllers
         {
             input.QueryId = id;
             return Ok(await Mediator.Send(input));
+        }
+        
+        /// <summary>
+        /// Removes a transaction given its GUID only if it belongs to the current
+        /// logged in user.
+        /// </summary>
+        /// <response code="200">Successfully removed, returns the ID of the transaction</response>
+        /// <response code="400">The request was malformed or the data had an error</response>
+        /// <response code="404">The transaction does not exist or does not belong to the user</response>
+        [Route("{id}")]
+        [HttpDelete]
+        public async Task<ActionResult> RemoveTransaction(Guid id)
+        {
+            return Ok(await Mediator.Send(new RemoveTransactionCommand
+            {
+                Id = id
+            }));
         }
     }
 }

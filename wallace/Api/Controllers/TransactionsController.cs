@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wallace.Application.Commands.Transactions.CreateTransaction;
+using Wallace.Application.Commands.Transactions.EditTransaction;
 using Wallace.Application.Queries.Transactions;
 
 namespace Wallace.Api.Controllers
@@ -61,6 +62,23 @@ namespace Wallace.Api.Controllers
         public async Task<ActionResult> GetTransaction(Guid id)
         {
             return Ok(await Mediator.Send(new GetTransactionQuery { Id = id }));
+        }
+        
+        /// <summary>
+        /// Updates a transaction given its GUID.
+        /// </summary>
+        /// <response code="200">Successfully updated, returns the ID of the transaction</response>
+        /// <response code="400">The request was malformed or the data had an error</response>
+        /// <response code="404">The transaction does not exist or does not belong to the user</response>
+        [Route("{id}")]
+        [HttpPut]
+        public async Task<ActionResult> ModifyTransaction(
+            [FromRoute] Guid id,
+            [FromBody] EditTransactionCommand input
+        )
+        {
+            input.QueryId = id;
+            return Ok(await Mediator.Send(input));
         }
     }
 }

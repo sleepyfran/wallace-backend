@@ -38,6 +38,8 @@ namespace Wallace.Tests.Application.Mappings
         [TestCase(typeof(TransactionDto), typeof(Transaction))]
         [TestCase(typeof(Transaction), typeof(CreateTransactionCommand))]
         [TestCase(typeof(CreateTransactionCommand), typeof(Transaction))]
+        [TestCase(typeof(Payee), typeof(PayeeDto))]
+        [TestCase(typeof(PayeeDto), typeof(Payee))]
         public void ShouldSupportMappingFrom(Type from, Type to)
         {
             var instance = Activator.CreateInstance(from);

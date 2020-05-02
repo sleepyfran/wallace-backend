@@ -295,7 +295,7 @@ namespace Wallace.Tests
         
         /// <summary>
         /// Adds the given categories to the test database data. If the users
-        /// linked to the accounts are not present, it'll try to add them
+        /// linked to the categories are not present, it'll try to add them
         /// with the matching test user, if none it's found then it'll throw
         /// an exception since a category cannot exist without an user.
         /// </summary>
@@ -309,10 +309,10 @@ namespace Wallace.Tests
         }
         
         /// <summary>
-        /// Adds the given categories to the test database data. If the users
-        /// linked to the accounts are not present, it'll try to add them
+        /// Adds the given transactions to the test database data. If the users
+        /// linked to the transactions are not present, it'll try to add them
         /// with the matching test user, if none it's found then it'll throw
-        /// an exception since a category cannot exist without an user.
+        /// an exception since a transaction cannot exist without an user.
         /// </summary>
         /// <param name="transactions"></param>
         /// <returns></returns>
@@ -320,6 +320,21 @@ namespace Wallace.Tests
         {
             await EnsureUsersAdded(transactions.Select(a => a.OwnerId));
             DbContext.Transactions.AddRange(transactions.Select(Clone));
+            await DbContext.SaveChangesAsync(CancellationToken.None);
+        }
+        
+        /// <summary>
+        /// Adds the given payees to the test database data. If the users
+        /// linked to the payees are not present, it'll try to add them
+        /// with the matching test user, if none it's found then it'll throw
+        /// an exception since a payee cannot exist without an user.
+        /// </summary>
+        /// <param name="payees"></param>
+        /// <returns></returns>
+        protected async Task SeedPayeeData(params Payee[] payees)
+        {
+            await EnsureUsersAdded(payees.Select(a => a.OwnerId));
+            DbContext.Payees.AddRange(payees.Select(Clone));
             await DbContext.SaveChangesAsync(CancellationToken.None);
         }
         
@@ -425,6 +440,18 @@ namespace Wallace.Tests
             Assert.AreEqual(expected.OwnerId, actual.OwnerId);
             Assert.AreEqual(expected.CategoryId, actual.CategoryId);
             Assert.AreEqual(expected.PayeeId, actual.PayeeId);
+        }
+        
+        protected void AssertAreEqual(Payee expected, Payee actual)
+        {
+            Assert.NotNull(expected);
+            Assert.NotNull(actual);
+            
+            if (expected.Id != Guid.Empty && actual.Id != Guid.Empty)
+                Assert.AreEqual(expected.Id, actual.Id);
+            
+            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.OwnerId, actual.OwnerId);
         }
 
         protected void CompareLists<T>(

@@ -28,7 +28,9 @@ namespace Wallace
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDataProtection();
-            
+
+            services.AddCors();
+
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -70,6 +72,11 @@ namespace Wallace
 
             app
                 .UseHttpsRedirection()
+                .UseCors(builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                )
                 .UseRouting()
                 .UseAuthentication()
                 .UseAuthorization()

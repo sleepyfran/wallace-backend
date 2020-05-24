@@ -57,20 +57,23 @@ namespace Wallace.Tests.Application.SignUp
         }
 
         [Test]
-        public async Task Handle_ShouldCreateValidToken()
+        public async Task Handle_ShouldReturnValidDetails()
         {
-            var (accessToken, refreshToken) = await _handler.Handle(
+            var auth = await _handler.Handle(
                 _validInput,
                 CancellationToken.None
             );
-            
-            Assert.IsNotNull(accessToken);
-            Assert.AreEqual(_validInput.Email, (string)accessToken);
-            Assert.AreEqual((int)TokenLifetime, (int)accessToken.Lifetime);
-            
-            Assert.IsNotNull(refreshToken);
-            Assert.AreEqual(_validInput.Email, (string)refreshToken);
-            Assert.AreEqual((int)TokenLifetime, (int)refreshToken.Lifetime);
+
+            Assert.IsNotNull(auth);
+
+            Assert.IsNotNull(auth.Token);
+            Assert.AreEqual(_validInput.Email, (string)auth.Token.AccessToken);
+            Assert.AreEqual((int)TokenLifetime, (int)auth.Token.AccessToken.Lifetime);
+            Assert.AreEqual(_validInput.Email, (string)auth.Token.RefreshToken);
+            Assert.AreEqual((int)TokenLifetime, (int)auth.Token.RefreshToken.Lifetime);
+
+            Assert.AreEqual(_validInput.Email, auth.Email);
+            Assert.AreEqual(_validInput.Name, auth.Name);
         }
     }
 }

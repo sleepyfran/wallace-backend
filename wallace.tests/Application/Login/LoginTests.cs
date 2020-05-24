@@ -36,16 +36,19 @@ namespace Wallace.Tests.Application.Login
         {
             await SeedUserData(TestUser);
 
-            var (accessToken, refreshToken) =
-                await _handler.Handle(_input, CancellationToken.None);
+            var auth = await _handler.Handle(_input, CancellationToken.None);
 
-            Assert.IsNotNull(accessToken);
-            Assert.AreEqual(_input.Email, (string) accessToken);
-            Assert.AreEqual((int) TokenLifetime, (int) accessToken.Lifetime);
+            Assert.IsNotNull(auth);
 
-            Assert.IsNotNull(refreshToken);
-            Assert.AreEqual(_input.Email, (string) refreshToken);
-            Assert.AreEqual((int) TokenLifetime, (int) refreshToken.Lifetime);
+            Assert.IsNotNull(auth.Token);
+            Assert.AreEqual(TestUser.Email, (string) auth.Token.AccessToken);
+            Assert.AreEqual((int) TokenLifetime, (int) auth.Token.AccessToken.Lifetime);
+            Assert.AreEqual(TestUser.Email, (string)auth.Token.RefreshToken);
+            Assert.AreEqual((int) TokenLifetime, (int) auth.Token.RefreshToken.Lifetime);
+
+            Assert.AreEqual(TestUser.Id, auth.Id);
+            Assert.AreEqual(TestUser.Email, auth.Email);
+            Assert.AreEqual(TestUser.Name, auth.Name);
         }
 
         [Test]

@@ -4,14 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Wallace.Application.Common.Dto;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Domain.Exceptions;
-using Wallace.Domain.Identity.Entities;
 using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Auth.Login
 {
-    public class LoginCommand : IRequest<(Token, Token)>
+    public class LoginCommand : IRequest<AuthDto>
     {
         /// <summary>
         /// Email of the user used to login.
@@ -27,7 +27,7 @@ namespace Wallace.Application.Commands.Auth.Login
     /// <summary>
     /// Checks user's credentials and returns a token for API calls.
     /// </summary>
-    public class LoginCommandHandler : IRequestHandler<LoginCommand, (Token, Token)>
+    public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthDto>
     {
         private readonly IDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
@@ -44,7 +44,7 @@ namespace Wallace.Application.Commands.Auth.Login
             _tokenBuilder = tokenBuilder;
         }
         
-        public async Task<(Token, Token)> Handle(
+        public async Task<AuthDto> Handle(
             LoginCommand request,
             CancellationToken cancellationToken
         )
@@ -66,10 +66,17 @@ namespace Wallace.Application.Commands.Auth.Login
             if (!passwordMatches)
                 throw new InvalidCredentialException();
 
-            return (
-                _tokenBuilder.BuildAccessToken(existingUser),
-                _tokenBuilder.BuildRefreshToken(existingUser)
-            );
+            return new AuthDto
+            {
+                Id = existingUser.Id,
+                Name = existingUser.Name,
+                Email = existingUser.Email,
+                Token = new TokenDto
+                {
+                    AccessToken = _tokenBuilder.BuildAccessToken(existingUser),
+                    RefreshToken = _tokenBuilder.BuildRefreshToken(existingUser)
+                }
+            };
         }
     }
 }

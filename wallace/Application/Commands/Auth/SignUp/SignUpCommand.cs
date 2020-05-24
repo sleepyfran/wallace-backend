@@ -1,14 +1,14 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Wallace.Application.Common.Dto;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Domain.Entities;
-using Wallace.Domain.Identity.Entities;
 using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Auth.SignUp
 {
-    public class SignUpCommand : IRequest<(Token, Token)>
+    public class SignUpCommand : IRequest<AuthDto>
     {
         /// <summary>
         /// Name of the user.
@@ -30,7 +30,7 @@ namespace Wallace.Application.Commands.Auth.SignUp
     /// Creates a new user and returns a JWT token for authenticating future
     /// API calls.
     /// </summary>
-    public class SignUpCommandHandler : IRequestHandler<SignUpCommand, (Token, Token)>
+    public class SignUpCommandHandler : IRequestHandler<SignUpCommand, AuthDto>
     {
         private readonly IDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
@@ -47,7 +47,7 @@ namespace Wallace.Application.Commands.Auth.SignUp
             _tokenBuilder = tokenBuilder;
         }
         
-        public async Task<(Token, Token)> Handle(
+        public async Task<AuthDto> Handle(
             SignUpCommand request,
             CancellationToken cancellationToken
         )
@@ -63,10 +63,17 @@ namespace Wallace.Application.Commands.Auth.SignUp
             _dbContext.Users.Add(user);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return (
-                _tokenBuilder.BuildAccessToken(user),
-                _tokenBuilder.BuildRefreshToken(user)
-            );
+            return new AuthDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Email = user.Email,
+                Token = new TokenDto
+                {
+                    AccessToken = _tokenBuilder.BuildAccessToken(user),
+                    RefreshToken = _tokenBuilder.BuildRefreshToken(user)
+                }
+            };
         }
     }
 }

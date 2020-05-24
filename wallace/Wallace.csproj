@@ -33,5 +33,6 @@
     <Folder Include="Application\Common\Interfaces\" />
     <Folder Include="Persistence\" />
     <Folder Include="Persistence\Configurations\" />
+    <Folder Include="Application\Common\Dto\Auth\" />
   </ItemGroup>
 </Project>

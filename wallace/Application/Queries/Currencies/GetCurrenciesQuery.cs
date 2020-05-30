@@ -39,6 +39,8 @@ namespace Wallace.Application.Queries.Currencies
                     }
                 })
                 .Where(ri => ri != null)
+                .GroupBy(ri => ri.CurrencyEnglishName)
+                .Select(g => g.First())
                 .Select(ri => new CurrencyDto
                 {
                     Code = ri.ISOCurrencySymbol,

@@ -9,21 +9,20 @@ using Wallace.Application.Common.Dto;
 
 namespace Wallace.Application.Queries.Currencies
 {
-    public class GetCurrenciesQuery : IRequest<IEnumerable<CurrencyDto>> { }
+    public class GetCurrenciesQuery : IRequest<List<CurrencyDto>> { }
 
     /**
      * Returns all the currencies available in the RegionInfo of the machine.
      * This might give problems in the long run since a machine might not have
      * all regions available, but it should not be something to worry right now.
      */
-    public class GetCurrenciesQueryHandler : IRequestHandler<GetCurrenciesQuery, IEnumerable<CurrencyDto>>
+    public class GetCurrenciesQueryHandler : IRequestHandler<GetCurrenciesQuery, List<CurrencyDto>>
     {
-        public Task<IEnumerable<CurrencyDto>> Handle(
+        public Task<List<CurrencyDto>> Handle(
             GetCurrenciesQuery request,
             CancellationToken cancellationToken
         )
         {
-            // TODO: Cache values.
             var currencies = CultureInfo.GetCultures(CultureTypes.AllCultures)
                 .Select(ci => ci.LCID)
                 .Distinct()
@@ -47,7 +46,8 @@ namespace Wallace.Application.Queries.Currencies
                     Code = ri.ISOCurrencySymbol,
                     Name = ri.CurrencyEnglishName,
                     Symbol = ri.CurrencySymbol
-                });
+                })
+                .ToList();
 
             return Task.FromResult(currencies);
         }

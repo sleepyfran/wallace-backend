@@ -21,5 +21,6 @@
   <ItemGroup>
     <Folder Include="Application\Currencies\" />
     <Folder Include="Application\Currencies\GetCurrencies\" />
+    <Folder Include="Application\Cache\" />
   </ItemGroup>
 </Project>

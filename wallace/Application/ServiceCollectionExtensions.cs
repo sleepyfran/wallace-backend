@@ -20,6 +20,10 @@ namespace Wallace.Application
                     typeof(IPipelineBehavior<,>),
                     typeof(RequestValidationBehavior<,>)
                 )
+                .AddSingleton(
+                    typeof(IPipelineBehavior<,>),
+                    typeof(CacheRequestBehavior<,>)
+                )
                 .AddMediatR(Assembly.GetExecutingAssembly())
                 .AddAutoMapper(Assembly.GetExecutingAssembly());
         }

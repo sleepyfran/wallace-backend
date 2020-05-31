@@ -7,6 +7,6 @@ namespace Wallace.Application.Common.Dto
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public TokenDto Token { get; set; }
+        public TokenCollectionDto Token { get; set; }
     }
 }

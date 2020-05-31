@@ -21,7 +21,8 @@ namespace Wallace.Tests.Application.SignUp
             _handler = new SignUpCommandHandler(
                 DbContext,
                 PasswordHasher,
-                TokenBuilder
+                TokenBuilder,
+                DateTime
             );
             
             _validInput = new SignUpCommand
@@ -67,10 +68,17 @@ namespace Wallace.Tests.Application.SignUp
             Assert.IsNotNull(auth);
 
             Assert.IsNotNull(auth.Token);
-            Assert.AreEqual(_validInput.Email, (string)auth.Token.AccessToken);
-            Assert.AreEqual((int)TokenLifetime, (int)auth.Token.AccessToken.Lifetime);
-            Assert.AreEqual(_validInput.Email, (string)auth.Token.RefreshToken);
-            Assert.AreEqual((int)TokenLifetime, (int)auth.Token.RefreshToken.Lifetime);
+            Assert.AreEqual(TestUser.Email, auth.Token.AccessToken.Jwt);
+            Assert.AreEqual(
+                DateTime.UtcNow.AddMinutes(TokenLifetime),
+                auth.Token.AccessToken.Expiry
+            );
+
+            Assert.AreEqual(TestUser.Email, auth.Token.RefreshToken.Jwt);
+            Assert.AreEqual(
+                DateTime.UtcNow.AddMinutes(TokenLifetime),
+                auth.Token.RefreshToken.Expiry
+            );
 
             Assert.AreEqual(_validInput.Email, auth.Email);
             Assert.AreEqual(_validInput.Name, auth.Name);

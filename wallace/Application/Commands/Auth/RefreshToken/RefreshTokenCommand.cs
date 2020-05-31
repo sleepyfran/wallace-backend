@@ -1,28 +1,36 @@
+using System;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Wallace.Application.Common.Dto;
 using Wallace.Application.Common.Interfaces;
 using Wallace.Domain.Common.Interfaces;
-using Wallace.Domain.Identity.Entities;
 using Wallace.Domain.Identity.Interfaces;
 
 namespace Wallace.Application.Commands.Auth.Refresh
 {
-    public class RefreshTokenCommand : IRequest<Token>
+    public class RefreshTokenCommand : IRequest<TokenCollectionDto>
     {
         /// <summary>
         /// Refresh token given to the user.
         /// </summary>
-        public string RefreshToken { get; set; }
+        public string Jwt { get; set; }
+
+        /// <summary>
+        /// Expiry date given with the token. Doesn't actually get checked
+        /// since that's already in the JWT token, but used to return it back
+        /// to the user.
+        /// </summary>
+        public DateTime Expiry { get; set; }
     }
 
     /// <summary>
     /// Check's the refresh token validity and returns a new access token for
     /// the holder of the token.
     /// </summary>
-    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, Token>
+    public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, TokenCollectionDto>
     {
         private readonly IDbContext _dbContext;
         private readonly ITokenData _tokenData;
@@ -45,15 +53,15 @@ namespace Wallace.Application.Commands.Auth.Refresh
             _dateTime = dateTime;
         }
         
-        public async Task<Token> Handle(
+        public async Task<TokenCollectionDto> Handle(
             RefreshTokenCommand request,
             CancellationToken cancellationToken
         )
         {
-            if (!_tokenChecker.IsValid(request.RefreshToken, _dateTime.UtcNow))
+            if (!_tokenChecker.IsValid(request.Jwt, _dateTime.UtcNow))
                 throw new InvalidCredentialException();
 
-            var tokenUserId = _tokenData.GetUserIdFrom(request.RefreshToken);
+            var tokenUserId = _tokenData.GetUserIdFrom(request.Jwt);
             if (tokenUserId == null)
                 throw new InvalidCredentialException();
 
@@ -66,7 +74,21 @@ namespace Wallace.Application.Commands.Auth.Refresh
             if (user == null)
                 throw new InvalidCredentialException();
 
-            return _tokenBuilder.BuildAccessToken(user);
+            var refreshedToken = _tokenBuilder.BuildAccessToken(user);
+
+            return new TokenCollectionDto
+            {
+                AccessToken = new TokenDto
+                {
+                    Jwt = refreshedToken.Jwt,
+                    Expiry = _dateTime.UtcNow.AddMinutes(refreshedToken.Lifetime)
+                },
+                RefreshToken = new TokenDto
+                {
+                    Jwt = request.Jwt,
+                    Expiry = request.Expiry
+                }
+            };
         }
     }
 }

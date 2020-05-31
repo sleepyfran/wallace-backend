@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Wallace.Application.Common.Dto;
 using Wallace.Application.Common.Interfaces;
+using Wallace.Domain.Common.Interfaces;
 using Wallace.Domain.Exceptions;
 using Wallace.Domain.Identity.Interfaces;
 
@@ -32,16 +33,19 @@ namespace Wallace.Application.Commands.Auth.Login
         private readonly IDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
         private readonly ITokenBuilder _tokenBuilder;
+        private readonly IDateTime _dateTime;
 
         public LoginCommandHandler(
             IDbContext dbContext,
             IPasswordHasher passwordHasher,
-            ITokenBuilder tokenBuilder
+            ITokenBuilder tokenBuilder,
+            IDateTime dateTime
         )
         {
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
             _tokenBuilder = tokenBuilder;
+            _dateTime = dateTime;
         }
         
         public async Task<AuthDto> Handle(
@@ -71,11 +75,11 @@ namespace Wallace.Application.Commands.Auth.Login
                 Id = existingUser.Id,
                 Name = existingUser.Name,
                 Email = existingUser.Email,
-                Token = new TokenDto
-                {
-                    AccessToken = _tokenBuilder.BuildAccessToken(existingUser),
-                    RefreshToken = _tokenBuilder.BuildRefreshToken(existingUser)
-                }
+                Token = TokenCollectionDto.CreateFor(
+                    _dateTime.UtcNow,
+                    _tokenBuilder.BuildAccessToken(existingUser),
+                    _tokenBuilder.BuildRefreshToken(existingUser)
+                )
             };
         }
     }

@@ -50,12 +50,7 @@ namespace Wallace.Api.Controllers
         [Route("refresh")]
         public async Task<ActionResult<Token>> Refresh(RefreshTokenCommand input)
         {
-            var accessToken = await Mediator.Send(input);
-            return Ok(new
-            {
-                access = accessToken.Jwt,
-                refresh = input.RefreshToken
-            });
+            return Ok(await Mediator.Send(input));
         }
     }
 }

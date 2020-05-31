@@ -30,14 +30,27 @@ namespace Wallace.Tests.Application.RefreshToken
         {
             await SeedUserData(TestUser);
             
-            var refreshToken = await _handler.Handle(
-                new RefreshTokenCommand(),
+            var tokens = await _handler.Handle(
+                new RefreshTokenCommand
+                {
+                    Jwt = TestUser.Email,
+                    Expiry = DateTime.UtcNow.AddMinutes(TokenLifetime)
+                },
                 CancellationToken.None
             );
-            
-            Assert.IsNotNull(refreshToken);
-            Assert.AreEqual(TestUser.Email, (string)refreshToken);
-            Assert.AreEqual(10, (int)refreshToken.Lifetime);
+
+            Assert.IsNotNull(tokens);
+            Assert.AreEqual(TestUser.Email, tokens.AccessToken.Jwt);
+            Assert.AreEqual(
+                DateTime.UtcNow.AddMinutes(TokenLifetime),
+                tokens.AccessToken.Expiry
+            );
+
+            Assert.AreEqual(TestUser.Email, tokens.RefreshToken.Jwt);
+            Assert.AreEqual(
+                DateTime.UtcNow.AddMinutes(TokenLifetime),
+                tokens.RefreshToken.Expiry
+            );
         }
 
         [Test]

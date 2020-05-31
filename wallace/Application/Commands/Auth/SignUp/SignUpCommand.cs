@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Wallace.Application.Common.Dto;
 using Wallace.Application.Common.Interfaces;
+using Wallace.Domain.Common.Interfaces;
 using Wallace.Domain.Entities;
 using Wallace.Domain.Identity.Interfaces;
 
@@ -35,16 +36,19 @@ namespace Wallace.Application.Commands.Auth.SignUp
         private readonly IDbContext _dbContext;
         private readonly IPasswordHasher _passwordHasher;
         private readonly ITokenBuilder _tokenBuilder;
+        private readonly IDateTime _dateTime;
 
         public SignUpCommandHandler(
             IDbContext dbContext,
             IPasswordHasher passwordHasher,
-            ITokenBuilder tokenBuilder
+            ITokenBuilder tokenBuilder,
+            IDateTime dateTime
         )
         {
             _dbContext = dbContext;
             _passwordHasher = passwordHasher;
             _tokenBuilder = tokenBuilder;
+            _dateTime = dateTime;
         }
         
         public async Task<AuthDto> Handle(
@@ -68,11 +72,11 @@ namespace Wallace.Application.Commands.Auth.SignUp
                 Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
-                Token = new TokenDto
-                {
-                    AccessToken = _tokenBuilder.BuildAccessToken(user),
-                    RefreshToken = _tokenBuilder.BuildRefreshToken(user)
-                }
+                Token = TokenCollectionDto.CreateFor(
+                    _dateTime.UtcNow,
+                    _tokenBuilder.BuildAccessToken(user),
+                    _tokenBuilder.BuildRefreshToken(user)
+                )
             };
         }
     }
